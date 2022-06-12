@@ -10,7 +10,7 @@ axios.interceptors.request.use(async (config) => {
     const token = await AsyncStorage.getItem("accessToken");
 
     config.url = `${REACT_APP_API_URL}${config.url}`;
-    config.headers = { 'Content-Type': 'multipart/form-data' }
+    //config.headers = { 'Content-Type': 'multipart/form-data' }
     
     if (token) {
         config.headers = { /* ...config.headers, */ 'Authorization': JSON.parse(token || "{}") }

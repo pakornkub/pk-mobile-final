@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  FormControl,
-  VStack,
-  Input,
-  Icon,
-  Button,
-  Text,
-  Image,
-} from "native-base";
+import { FormControl, VStack, Input, Icon, Button, Text } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -21,8 +13,8 @@ const Login: React.FC<any> = ({ navigation }) => {
   const { isLoading, isError, error, status, mutate } = useAuthLogin();
   const [show, setShow] = useState<boolean>(false);
   const [form, setForm] = useState<IAuthLoginParams>({
-    username: "",
-    password: "",
+    username: "pakorn.wo",
+    password: "1234",
   });
 
   const handleChange = (text: string, name: string) => {
@@ -37,6 +29,7 @@ const Login: React.FC<any> = ({ navigation }) => {
     try {
       //? get token from AsyncStorage
       const token = await AsyncStorage.getItem("accessToken");
+      console.log(token);
     } catch (error) {
       console.log(error);
     }
