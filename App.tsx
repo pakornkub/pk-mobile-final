@@ -3,6 +3,7 @@ import AppContainer from "./src/components/AppContainer";
 
 import Login from "./src/views/Login/";
 import Main from "./src/views/Main/";
+import CheckStock from "./src/views/CheckStock/";
 
 const App: React.FC = () => {
   const Stack: any = createStackNavigator();
@@ -12,6 +13,7 @@ const App: React.FC = () => {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="CheckStock" component={CheckStock} />
       </Stack.Navigator>
     </AppContainer>
   );

@@ -29,7 +29,7 @@ const Login: React.FC<any> = ({ navigation }) => {
     try {
       //? get token from AsyncStorage
       const token = await AsyncStorage.getItem("accessToken");
-      console.log(token);
+      //console.log(token);
     } catch (error) {
       console.log(error);
     }
