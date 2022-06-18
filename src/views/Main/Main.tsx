@@ -1,19 +1,21 @@
-import React from "react";
-import { Container } from "native-base";
-import { useSelector } from "react-redux";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import { selectAuth } from "../../contexts/slices/authSlice";
+import Login from "../Login";
+import Menu from "../Menu";
+import CheckStock from "../CheckStock";
 
-import GridList from "../../components/GridList";
-
-const Main: React.FC<any> = ({navigation}) => {
+const Main: React.FC = () => {
   
-  const { authResult } = useSelector(selectAuth);
+  const Stack: any = createStackNavigator();
 
   return (
-    <Container h="100%">
-      <GridList items={authResult?.data?.permission} col={2} navigation={navigation} />
-    </Container>
+    <>
+      <Stack.Navigator initialRouteName="Menu">
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Menu" component={Menu} />
+        <Stack.Screen name="CheckStock" component={CheckStock} />
+      </Stack.Navigator>
+      </>
   );
 };
 

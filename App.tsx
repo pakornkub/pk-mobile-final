@@ -1,20 +1,14 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+
 import AppContainer from "./src/components/AppContainer";
 
-import Login from "./src/views/Login/";
-import Main from "./src/views/Main/";
-import CheckStock from "./src/views/CheckStock/";
+import Main from "./src/views/Main/Main";
 
 const App: React.FC = () => {
-  const Stack: any = createStackNavigator();
 
   return (
     <AppContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="CheckStock" component={CheckStock} />
-      </Stack.Navigator>
+      <Main/>
     </AppContainer>
   );
 };

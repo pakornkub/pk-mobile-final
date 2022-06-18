@@ -37,7 +37,7 @@ const Login: React.FC<any> = ({ navigation }) => {
 
   useEffect(() => {
     if (status === "success") {
-      navigation.navigate("Main");
+      navigation.navigate("Menu");
     } else if (status === "error") {
       console.log(status);
     }

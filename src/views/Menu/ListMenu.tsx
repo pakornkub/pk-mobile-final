@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, SafeAreaView ,View } from "react-native";
+import { StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import { FlatList, Box, Pressable } from "native-base";
 
 const windowWidth = Dimensions.get("window").width;
