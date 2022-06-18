@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import theme from "../configs/theme";
@@ -12,11 +13,13 @@ const AppContainer: React.FC<any> = (props) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <NavigationContainer>
-          <NativeBaseProvider theme={theme}>
-            {props.children}
-          </NativeBaseProvider>
-        </NavigationContainer>
+        <Suspense fallback={<></>}>
+          <NavigationContainer>
+            <NativeBaseProvider theme={theme}>
+              {props.children}
+            </NativeBaseProvider>
+          </NavigationContainer>
+        </Suspense>
       </Provider>
     </QueryClientProvider>
   );

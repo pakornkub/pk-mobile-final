@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FormControl, VStack, Input, Icon, Button, Text } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useAuthLogin } from "../../hooks/useLogin";
 
@@ -9,7 +8,7 @@ import { IAuthLoginParams } from "../../types/views/Login";
 
 import Logo from "../../assets/toto.svg";
 
-const Login: React.FC<any> = ({ navigation }) => {
+const Login: React.FC = () => {
   const { isLoading, isError, error, status, mutate } = useAuthLogin();
   const [show, setShow] = useState<boolean>(false);
   const [form, setForm] = useState<IAuthLoginParams>({
@@ -25,19 +24,8 @@ const Login: React.FC<any> = ({ navigation }) => {
     mutate(form);
   };
 
-  const validateToken = async () => {
-    try {
-      //? get token from AsyncStorage
-      const token = await AsyncStorage.getItem("accessToken");
-      //console.log(token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     if (status === "success") {
-      navigation.navigate("Menu");
     } else if (status === "error") {
       console.log(status);
     }
@@ -45,14 +33,10 @@ const Login: React.FC<any> = ({ navigation }) => {
     return () => {};
   }, [status]);
 
-  useEffect(() => {
-    validateToken();
-  }, []);
-
   return (
     <FormControl isRequired isInvalid>
       <VStack space={5} p={10}>
-        <Logo width={120} height={40} />
+        {/* <Logo width={120} height={40} /> */}
         <Input
           InputLeftElement={
             <Icon as={<MaterialIcons name="person" />} size="md" m={2} />
