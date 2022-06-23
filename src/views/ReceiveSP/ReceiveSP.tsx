@@ -10,7 +10,10 @@ import { Box, Input, Select, Icon, VStack, Button } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 
+import AppLoadingScreen from "../../components/AppLoadingScreen";
 import AppScanner from "../../components/AppScanner";
+
+import { useReceiveSP, useReceiveSPItem } from "../../hooks/useReceiveSP";
 
 const ReceiveSP: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -19,6 +22,23 @@ const ReceiveSP: React.FC = () => {
 
   const disabledInput = useRef<boolean>(true);
   const focusInput = useRef<boolean>(false);
+
+  const {
+    isLoading: recIsLoading,
+    isFetching,
+    isError,
+    data: recOrder,
+    status,
+    error,
+  } = useReceiveSP();
+
+  const {
+    isLoading: itemIsLoading,
+    data: recOrderItem,
+    refetch,
+  } = useReceiveSPItem({
+    Order: form?.Order || "",
+  });
 
   const handleScanner = (value: any) => {
     setForm({ ...form, QR: value });
@@ -31,16 +51,16 @@ const ReceiveSP: React.FC = () => {
     focusInput.current = true;
   };
 
-  //? when search & refresh to call function
   useEffect(() => {
-    console.log(1);
-  }, [refresh]);
+    refetch();
+  }, [form]);
 
   return (
     <>
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
+            <AppLoadingScreen show={false} />
             <VStack space={10} p={5}>
               <Select
                 width={"100%"}
@@ -48,19 +68,16 @@ const ReceiveSP: React.FC = () => {
                 placeholder="RECEIVE SP ORDER NO."
                 onValueChange={(value) => handleChange("Order", value)}
               >
-                <Select.Item shadow={2} label="UX Research" value="ux" />
-                <Select.Item shadow={2} label="Web Development" value="web" />
-                <Select.Item
-                  shadow={2}
-                  label="Cross Platform Development"
-                  value="cross"
-                />
-                <Select.Item shadow={2} label="UI Designing" value="ui" />
-                <Select.Item
-                  shadow={2}
-                  label="Backend Development"
-                  value="backend"
-                />
+                {recOrder?.data?.data?.map((value: any) => {
+                  return (
+                    <Select.Item
+                      key={value.Rec_ID}
+                      shadow={2}
+                      label={value.Rec_NO}
+                      value={value.Rec_ID}
+                    />
+                  );
+                })}
               </Select>
               <Input
                 showSoftInputOnFocus={false}
@@ -85,121 +102,33 @@ const ReceiveSP: React.FC = () => {
                 style={{ height: "50%" }}
                 refreshControl={
                   <RefreshControl
-                    refreshing={refresh}
-                    onRefresh={() => setRefresh(true)}
+                    refreshing={itemIsLoading}
+                    onRefresh={() => refetch()}
                   />
                 }
               >
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title>NO.</DataTable.Title>
+                      <DataTable.Title style={{maxWidth:"10%"}}>NO.</DataTable.Title>
                       <DataTable.Title>SP</DataTable.Title>
-                      <DataTable.Title numeric>UNLOCK</DataTable.Title>
                       <DataTable.Title numeric>LOCK</DataTable.Title>
                       <DataTable.Title numeric>TOTAL</DataTable.Title>
                     </DataTable.Header>
-
-                    <DataTable.Row>
-                      <DataTable.Title>1</DataTable.Title>
-                      <DataTable.Cell>ITEM A</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                      <DataTable.Title>2</DataTable.Title>
-                      <DataTable.Cell>ITEM B</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                      <DataTable.Title>3</DataTable.Title>
-                      <DataTable.Cell>ITEM C</DataTable.Cell>
-                      <DataTable.Cell numeric>0</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                      <DataTable.Cell numeric>100</DataTable.Cell>
-                    </DataTable.Row>
+                    {recOrderItem?.data?.data?.map((value: any, key : number) => {
+                      return (
+                        <DataTable.Row key={key}>
+                          <DataTable.Title style={{maxWidth:"10%"}}>{value.No}</DataTable.Title>
+                          <DataTable.Cell>{value.SP}</DataTable.Cell>
+                          <DataTable.Cell numeric>{value.Unlock}</DataTable.Cell>
+                          <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
+                        </DataTable.Row>
+                      );
+                    }) || (
+                      <DataTable.Row>
+                        <DataTable.Title>No Data</DataTable.Title>
+                      </DataTable.Row>
+                    )}
                   </DataTable>
                 </TouchableOpacity>
               </ScrollView>
