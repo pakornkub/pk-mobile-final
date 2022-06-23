@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, Icon } from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Avatar, HStack, Pressable } from "native-base";
 import { Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,8 +9,9 @@ import { setAuth, selectAuth } from "../../contexts/slices/authSlice";
 
 import AppScanner from "../../components/AppScanner";
 import { getCurrentTimeStamp } from "../../utils/date";
-import { expireTime } from "../../configs/token";
 import { getTimeFromToken } from "../../utils/token";
+import { expireTime } from "../../configs/token";
+
 
 const Login = React.lazy(() => import("../Login"));
 const Menu = React.lazy(() => import("../Menu"));
@@ -91,16 +91,36 @@ const Main: React.FC = () => {
               options={() => ({
                 title: "Main",
                 headerRight: () => (
-                  <IconButton
-                    _icon={{
-                      as: MaterialIcons,
-                      name: "logout",
-                    }}
-                    variant="ghost"
-                    size="lg"
-                    colorScheme="warning"
-                    onPress={() => handleLogout()}
-                  />
+                  <HStack space={2} pr="2">
+                    <Pressable onPress={() => handleLogout()}>
+                      {({ isHovered, isPressed }) => {
+                        return (
+                          <Avatar
+                            bg="primary.500"
+                            size="sm"
+                            mt={1}
+                            color={
+                              isPressed
+                                ? "primary.700"
+                                : isHovered
+                                ? "primary.700"
+                                : "primary.500"
+                            }
+                            style={{
+                              transform: [
+                                {
+                                  scale: isPressed ? 0.96 : 1,
+                                },
+                              ],
+                            }}
+                          >
+                            {authResult.data.UserName.charAt(0).toUpperCase()}
+                            <Avatar.Badge bg="green.500" />
+                          </Avatar>
+                        );
+                      }}
+                    </Pressable>
+                  </HStack>
                 ),
               })}
             />
@@ -109,7 +129,13 @@ const Main: React.FC = () => {
             <Stack.Screen name="AppScanner" component={AppScanner} />
           </>
         ) : (
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={() => ({
+              headerShown: false,
+            })}
+          />
         )}
       </Stack.Navigator>
     </>
