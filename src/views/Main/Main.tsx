@@ -12,11 +12,11 @@ import { getCurrentTimeStamp } from "../../utils/date";
 import { getTimeFromToken } from "../../utils/token";
 import { expireTime } from "../../configs/token";
 
-
 const Login = React.lazy(() => import("../Login"));
 const Menu = React.lazy(() => import("../Menu"));
 
 const ReceiveSP = React.lazy(() => import("../ReceiveSP"));
+const UnlockSP = React.lazy(() => import("../UnlockSP"));
 const CheckStock = React.lazy(() => import("../CheckStock"));
 
 const Main: React.FC = () => {
@@ -125,6 +125,7 @@ const Main: React.FC = () => {
               })}
             />
             <Stack.Screen name="ReceiveSP" component={ReceiveSP} />
+            <Stack.Screen name="UnlockSP" component={UnlockSP} />
             <Stack.Screen name="CheckStock" component={CheckStock} />
             <Stack.Screen name="AppScanner" component={AppScanner} />
           </>

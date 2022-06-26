@@ -63,13 +63,12 @@ const Login: React.FC = () => {
       toast.show({
         render: () => {
           return (
-            <AppAlert text={error?.response?.data?.message} type="error"/>
+            <AppAlert text={error?.response?.data?.message} type="error" />
           );
         },
         placement: "top",
+        duration: 2000,
       });
-
-      console.log(error?.response?.data?.message);
     }
 
     return () => {};

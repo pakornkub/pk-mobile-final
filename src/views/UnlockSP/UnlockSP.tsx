@@ -25,13 +25,16 @@ import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 
 import {
-  useReceiveSP,
   useReceiveSPItem,
-  useExecReceiveSPTransactions,
-  useUpdateReceiveSP,
 } from "../../hooks/useReceiveSP";
 
-const ReceiveSP: React.FC = () => {
+import {
+  useUnlockSP,
+  useUpdateUnlockSP,
+  useUpdateUnlockSPTag
+} from "../../hooks/useUnlockSP";
+
+const UnlockSP: React.FC = () => {
   const toast = useToast();
 
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -51,7 +54,7 @@ const ReceiveSP: React.FC = () => {
     data: orderData,
     status,
     error,
-  } = useReceiveSP();
+  } = useUnlockSP();
 
   const {
     isLoading: itemIsLoading,
@@ -62,30 +65,31 @@ const ReceiveSP: React.FC = () => {
   });
 
   const {
-    isLoading: transIsLoading,
-    isError: transIsError,
-    status: transStatus,
-    error: transError,
-    mutate: transMutate,
-    data: transData,
-  } = useExecReceiveSPTransactions();
-
-  const {
     isLoading: updateIsLoading,
     isError: updateIsError,
     status: updateStatus,
     error: updateError,
     mutate: updateMutate,
     data: updateData,
-  } = useUpdateReceiveSP();
+  } = useUpdateUnlockSP();
+
+  const {
+    isLoading: tagIsLoading,
+    isError: tagIsError,
+    status: tagStatus,
+    error: tagError,
+    mutate: tagMutate,
+    data: tagData,
+  } = useUpdateUnlockSPTag();
 
   const handleChangeOrder = (value: string) => {
+
     if (!value) {
       return;
     }
-    
+
     setForm({ ...form, Rec_ID: value });
-    clearValidateReceiveSP();
+    clearValidateUnlockSP();
   };
 
   const handleScanner = (value: any) => {
@@ -95,7 +99,7 @@ const ReceiveSP: React.FC = () => {
       return;
     }
 
-    clearValidateReceiveSP();
+    clearValidateUnlockSP();
 
     const qr = getDataFromQR(value);
 
@@ -109,9 +113,9 @@ const ReceiveSP: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    const sumLock =
+    const sumUnlock =
       itemData?.data?.data?.reduce((previousValue: any, currentValue: any) => {
-        return previousValue + parseInt(currentValue.Lock);
+        return previousValue + parseInt(currentValue.Unlock);
       }, 0) || 0;
 
     const sumTotal =
@@ -119,12 +123,12 @@ const ReceiveSP: React.FC = () => {
         return previousValue + parseInt(currentValue.Total);
       }, 0) || 0;
 
-    if (parseInt(sumLock) === parseInt(sumTotal) && parseInt(sumLock) !== 0) {
+    if (parseInt(sumUnlock) === parseInt(sumTotal) && parseInt(sumUnlock) !== 0) {
       setDisabledButton(false);
     }
   };
 
-  const validateReceiveSP = () => {
+  const validateUnlockSP = () => {
     refScanner.current = false;
 
     if (!form.Rec_ID) {
@@ -141,7 +145,7 @@ const ReceiveSP: React.FC = () => {
     return true;
   };
 
-  const clearValidateReceiveSP = () => {
+  const clearValidateUnlockSP = () => {
     let err = { ...errors };
     delete err.Rec_ID;
     delete err.QR_NO;
@@ -156,7 +160,7 @@ const ReceiveSP: React.FC = () => {
 
   useEffect(() => {
     if (refScanner.current) {
-      validateReceiveSP() && transMutate(form);
+      validateUnlockSP() && tagMutate(form);
     }
     itemRefetch();
   }, [form]);
@@ -166,26 +170,27 @@ const ReceiveSP: React.FC = () => {
   }, [itemData]);
 
   useEffect(() => {
-    if (transStatus === "success") {
+    if (tagStatus === "success") {
       toast.show({
         render: () => (
-          <AppAlert text={transData?.data?.message || 'success'} type="success" />
+          <AppAlert text={tagData?.data?.message || 'success'} type="success" />
         ),
         placement: "top",
         duration: 2000,
       });
       setForm({ ...form, QR_NO: "", Tag_ID: "" });
       refScanner.current = false;
-    } else if (transStatus === "error") {
+    } else if (tagStatus === "error") {
       toast.show({
-        render: () => <AppAlert text={transError?.response?.data?.message || 'error'} type="error" />,
+        render: () => <AppAlert text={tagError?.response?.data?.message || 'error'} type="error" />,
         placement: "top",
         duration: 3000,
       });
       setForm({ ...form, QR_NO: "", Tag_ID: "" });
       refScanner.current = false;
     }
-  }, [transStatus]);
+
+  }, [tagStatus]);
 
   useEffect(() => {
     if (updateStatus === "success") {
@@ -207,6 +212,7 @@ const ReceiveSP: React.FC = () => {
         duration: 3000,
       });
     }
+
   }, [updateStatus]);
 
   useEffect(() => {
@@ -218,7 +224,7 @@ const ReceiveSP: React.FC = () => {
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <AppLoadingScreen show={updateIsLoading || transIsLoading} />
+            <AppLoadingScreen show={updateIsLoading || tagIsLoading} />
             <VStack space={10} p={5}>
               <FormControl isRequired isInvalid={"Rec_ID" in errors}>
                 <Select
@@ -286,7 +292,7 @@ const ReceiveSP: React.FC = () => {
                         NO.
                       </DataTable.Title>
                       <DataTable.Title>SP</DataTable.Title>
-                      <DataTable.Title numeric>LOCK</DataTable.Title>
+                      <DataTable.Title numeric>UNLOCK</DataTable.Title>
                       <DataTable.Title numeric>TOTAL</DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
@@ -297,7 +303,7 @@ const ReceiveSP: React.FC = () => {
                           </DataTable.Title>
                           <DataTable.Cell>{value.SP}</DataTable.Cell>
                           <DataTable.Cell numeric>
-                            {value.Lock}
+                            {value.Unlock}
                           </DataTable.Cell>
                           <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
                         </DataTable.Row>
@@ -330,4 +336,4 @@ const ReceiveSP: React.FC = () => {
   );
 };
 
-export default ReceiveSP;
+export default UnlockSP;
