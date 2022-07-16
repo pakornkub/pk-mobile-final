@@ -27,7 +27,7 @@ export const useReceiveSPItem = ({Rec_ID}: any) => {
     ["ReceiveSPItem", Rec_ID],
     () => getReceiveSPItem(Rec_ID),
     {
-      enabled: false,
+      enabled: true,
     }
   );
 };

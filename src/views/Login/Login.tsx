@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   FormControl,
   VStack,
@@ -13,7 +14,6 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { useAuthLogin } from "../../hooks/useLogin";
-
 import { IAuthLoginParams } from "../../types/views/Login";
 
 import AppAlert from "../../components/AppAlert";
@@ -23,38 +23,17 @@ import Logo from "../../assets/toto.svg";
 const Login: React.FC = () => {
   const toast = useToast();
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IAuthLoginParams>();
+
   const { isLoading, isError, error, status, mutate } = useAuthLogin();
   const [show, setShow] = useState<boolean>(false);
-  const [errors, setErrors] = useState<any>({});
-  const [form, setForm] = useState<IAuthLoginParams>({
-    username: "pakorn.wo",
-    password: "1234",
-  });
 
-  const handleSubmit = () => {
-    validateLogin() && mutate(form);
-  };
-
-  const handleChange = (name: string, value: string) => {
-    setForm({ ...form, [name]: value });
-
-    let err = { ...errors };
-    delete err[name];
-
-    setErrors(err);
-  };
-
-  const validateLogin = () => {
-    if (!form.username) {
-      setErrors({ ...errors, username: "Username is required" });
-      return false;
-    }
-    if (!form.password) {
-      setErrors({ ...errors, password: "Password is required" });
-      return false;
-    }
-
-    return true;
+  const onSubmit: SubmitHandler<IAuthLoginParams> = (data) => {
+    mutate(data);
   };
 
   useEffect(() => {
@@ -93,55 +72,70 @@ const Login: React.FC = () => {
             </Text>
           </Center>
           <FormControl isRequired isInvalid={"username" in errors}>
-            <Input
-              InputLeftElement={
-                <Icon as={<MaterialIcons name="person" />} size="md" />
-              }
-              variant="underlined"
-              p={2}
-              placeholder="Username"
-              value={form.username}
-              onChangeText={(text) => handleChange("username", text)}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  InputLeftElement={
+                    <Icon as={<MaterialIcons name="person" />} size="md" />
+                  }
+                  variant="underlined"
+                  p={2}
+                  placeholder="Username"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="username"
+              rules={{ required: "Username is required" }}
+              defaultValue="pakorn.wo"
             />
-            {"username" in errors && (
-              <FormControl.ErrorMessage>
-                {errors.username}
-              </FormControl.ErrorMessage>
-            )}
+            <FormControl.ErrorMessage>
+              {errors.username?.message}
+            </FormControl.ErrorMessage>
           </FormControl>
           <FormControl isRequired isInvalid={"password" in errors}>
-            <Input
-              InputLeftElement={
-                <Icon as={<MaterialIcons name="lock" />} size="md" />
-              }
-              variant="underlined"
-              p={2}
-              type={show ? "text" : "password"}
-              placeholder="Password"
-              InputRightElement={
-                <Icon
-                  size="md"
-                  color={show ? "blue.500" : "coolGray.500"}
-                  as={
-                    <MaterialIcons
-                      name={show ? "visibility" : "visibility-off"}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  InputLeftElement={
+                    <Icon as={<MaterialIcons name="lock" />} size="md" />
+                  }
+                  variant="underlined"
+                  p={2}
+                  type={show ? "text" : "password"}
+                  placeholder="Password"
+                  InputRightElement={
+                    <Icon
+                      size="md"
+                      color={show ? "blue.500" : "coolGray.500"}
+                      as={
+                        <MaterialIcons
+                          name={show ? "visibility" : "visibility-off"}
+                        />
+                      }
+                      onPress={() => setShow(!show)}
                     />
                   }
-                  onPress={() => setShow(!show)}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
                 />
-              }
-              value={form.password}
-              onChangeText={(text) => handleChange("password", text)}
+              )}
+              name="password"
+              rules={{ required: "Password is required" }}
+              defaultValue="1234"
             />
-            {"password" in errors && (
-              <FormControl.ErrorMessage>
-                {errors.password}
-              </FormControl.ErrorMessage>
-            )}
+
+            <FormControl.ErrorMessage>
+              {errors.password?.message}
+            </FormControl.ErrorMessage>
           </FormControl>
           <Button
             leftIcon={<Icon as={<MaterialIcons name="login" />} size="sm" />}
-            onPress={handleSubmit}
+            onPress={handleSubmit(onSubmit)}
           >
             SIGN IN
           </Button>

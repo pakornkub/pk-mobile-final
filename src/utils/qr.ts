@@ -4,7 +4,7 @@ export const getDataFromQR = (qr: string): any => {
 
         const qrObject = JSON.parse(qr);
 
-        return qrObject;
+        return qrObject[0];
     
     } catch (error:any) {
 

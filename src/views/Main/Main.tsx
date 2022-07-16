@@ -12,12 +12,19 @@ import { getCurrentTimeStamp } from "../../utils/date";
 import { getTimeFromToken } from "../../utils/token";
 import { expireTime } from "../../configs/token";
 
+import ReceiveSP from "../../views/ReceiveSP";
+import UnlockSP from "../../views/UnlockSP";
+import ReceiveReturn from "../../views/ReceiveReturn";
+import JobRepack from "../../views/JobRepack";
+import CheckStock from "../../views/CheckStock";
+
 const Login = React.lazy(() => import("../Login"));
 const Menu = React.lazy(() => import("../Menu"));
 
-const ReceiveSP = React.lazy(() => import("../ReceiveSP"));
-const UnlockSP = React.lazy(() => import("../UnlockSP"));
-const CheckStock = React.lazy(() => import("../CheckStock"));
+// const ReceiveSP = React.lazy(() => import("../ReceiveSP"));
+// const UnlockSP = React.lazy(() => import("../UnlockSP"));
+// const ReceiveReturn = React.lazy(() => import("../ReceiveReturn"));
+// const CheckStock = React.lazy(() => import("../CheckStock"));
 
 const Main: React.FC = () => {
   const Stack: any = createStackNavigator();
@@ -126,6 +133,8 @@ const Main: React.FC = () => {
             />
             <Stack.Screen name="ReceiveSP" component={ReceiveSP} />
             <Stack.Screen name="UnlockSP" component={UnlockSP} />
+            <Stack.Screen name="ReceiveReturn" component={ReceiveReturn} />
+            <Stack.Screen name="JobRepack" component={JobRepack} />
             <Stack.Screen name="CheckStock" component={CheckStock} />
             <Stack.Screen name="AppScanner" component={AppScanner} />
           </>
