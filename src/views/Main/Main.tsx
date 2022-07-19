@@ -16,6 +16,10 @@ import ReceiveSP from "../../views/ReceiveSP";
 import UnlockSP from "../../views/UnlockSP";
 import ReceiveReturn from "../../views/ReceiveReturn";
 import JobRepack from "../../views/JobRepack";
+import JobRecheck from "../../views/JobRecheck";
+import ShipToWH from "../../views/ShipToWH";
+import WHReceive from "../../views/WHReceive";
+import Withdraw from "../../views/Withdraw";
 import CheckStock from "../../views/CheckStock";
 
 const Login = React.lazy(() => import("../Login"));
@@ -135,6 +139,10 @@ const Main: React.FC = () => {
             <Stack.Screen name="UnlockSP" component={UnlockSP} />
             <Stack.Screen name="ReceiveReturn" component={ReceiveReturn} />
             <Stack.Screen name="JobRepack" component={JobRepack} />
+            <Stack.Screen name="JobRecheck" component={JobRecheck} />
+            <Stack.Screen name="ShipToWH" component={ShipToWH} />
+            <Stack.Screen name="WHReceive" component={WHReceive} />
+            <Stack.Screen name="Withdraw" component={Withdraw} />
             <Stack.Screen name="CheckStock" component={CheckStock} />
             <Stack.Screen name="AppScanner" component={AppScanner} />
           </>

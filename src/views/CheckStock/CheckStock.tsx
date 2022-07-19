@@ -80,7 +80,6 @@ const CheckStock: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(item)
     if (refScanner.current) {
       validateErrors() && itemRefetch();
     }

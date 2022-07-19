@@ -27,16 +27,16 @@ import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 
 import {
-  useJobRepack,
-  useJobRepackBOM,
-  useUpdateJobRepack,
-  useExecJobRepackTransactions,
-  useExecJobRepackItem,
-} from "../../hooks/useJobRepack";
+  useJobRecheck,
+  useJobRecheckBOM,
+  useUpdateJobRecheck,
+  useExecJobRecheckTransactions,
+  useExecJobRecheckItem,
+} from "../../hooks/useJobRecheck";
 
-const JobRepack: React.FC = () => {
+const JobRecheck: React.FC = () => {
   const initOrder = {};
-  const initItem = { QR_NO: "", Tag_ID: "", Item_ID: "" };
+  const initItem = { QR_NO: "", Tag_ID: "" };
   const initBox = { QR_NO_BOX: "" };
   const initErrors = {};
 
@@ -66,13 +66,13 @@ const JobRepack: React.FC = () => {
     data: orderData,
     status,
     error,
-  } = useJobRepack();
+  } = useJobRecheck();
 
   const {
     isLoading: bomIsLoading,
     data: bomData,
     refetch: bomRefetch,
-  } = useJobRepackBOM({
+  } = useJobRecheckBOM({
     JOB_ID: order?.JOB_ID || "",
   });
 
@@ -83,7 +83,7 @@ const JobRepack: React.FC = () => {
     error: itemError,
     mutate: itemMutate,
     data: itemData,
-  } = useExecJobRepackItem();
+  } = useExecJobRecheckItem();
 
   const {
     isLoading: transIsLoading,
@@ -92,7 +92,7 @@ const JobRepack: React.FC = () => {
     error: transError,
     mutate: transMutate,
     data: transData,
-  } = useExecJobRepackTransactions();
+  } = useExecJobRecheckTransactions();
 
   const {
     isLoading: updateIsLoading,
@@ -101,7 +101,7 @@ const JobRepack: React.FC = () => {
     error: updateError,
     mutate: updateMutate,
     data: updateData,
-  } = useUpdateJobRepack();
+  } = useUpdateJobRecheck();
 
   const handleChangeOrder = (value: string) => {
     if (!value) {
@@ -132,12 +132,7 @@ const JobRepack: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({
-      ...qr,
-      QR_NO: qr?.QR_NO || "",
-      Tag_ID: qr?.Tag_ID || "",
-      Item_ID: qr?.Item_ID || "",
-    });
+    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
 
     refScanner.current = true;
   };
@@ -198,17 +193,7 @@ const JobRepack: React.FC = () => {
     refScannerBox.current = false;
 
     if (!order.JOB_ID) {
-      setErrors({ ...errors, JOB_ID: "Repack Order is required" });
-      clearState("Item");
-      return false;
-    }
-
-    if (
-      bomData.data.data.filter((value: any) => {
-        return value.Item_ID == item.Item_ID && value.Actual == value.BOM;
-      }).length > 0
-    ) {
-      setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
+      setErrors({ ...errors, JOB_ID: "Recheck Order is required" });
       clearState("Item");
       return false;
     }
@@ -380,7 +365,7 @@ const JobRepack: React.FC = () => {
                   size={20}
                   width={"100%"}
                   accessibilityLabel="Choose Service"
-                  placeholder="REPACK ORDER NO."
+                  placeholder="RECHECK ORDER NO."
                   selectedValue={order.JOB || ""}
                   onValueChange={(value) => handleChangeOrder(value)}
                 >
@@ -408,7 +393,7 @@ const JobRepack: React.FC = () => {
                   showSoftInputOnFocus={false}
                   variant="underlined"
                   p={2}
-                  placeholder="QR SP"
+                  placeholder="QR FG"
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
@@ -445,7 +430,7 @@ const JobRepack: React.FC = () => {
                         <Text bold>NO.</Text>
                       </DataTable.Title>
                       <DataTable.Title>
-                        <Text bold>SP</Text>
+                        <Text bold>FG</Text>
                       </DataTable.Title>
                       <DataTable.Title numeric>
                         <Text bold>BOM</Text>
@@ -460,7 +445,7 @@ const JobRepack: React.FC = () => {
                           <DataTable.Title style={{ maxWidth: "10%" }}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.SP}</DataTable.Cell>
+                          <DataTable.Cell>{value.FG}</DataTable.Cell>
                           <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
                           <DataTable.Cell numeric>
                             {value.Actual}
@@ -532,4 +517,4 @@ const JobRepack: React.FC = () => {
   );
 };
 
-export default JobRepack;
+export default JobRecheck;
