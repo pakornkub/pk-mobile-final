@@ -106,7 +106,7 @@ const UnlockSP: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
+    setItem({ ...item, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
 
     refScanner.current = true;
   };
@@ -172,8 +172,8 @@ const UnlockSP: React.FC = () => {
   }, [order]);
 
   useEffect(() => {
-    if (refScanner.current) {
-      validateErrors() && tagMutate({ ...order, ...item });
+    if (refScanner.current && validateErrors()) {
+       tagMutate({ ...order, ...item });
     }
   }, [item]);
 

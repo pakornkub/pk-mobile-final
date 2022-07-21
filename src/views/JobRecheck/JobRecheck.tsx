@@ -36,7 +36,7 @@ import {
 
 const JobRecheck: React.FC = () => {
   const initOrder = {};
-  const initItem = { QR_NO: "", Tag_ID: "" };
+  const initItem = { QR_NO: "", Item_ID: "" };
   const initBox = { QR_NO_BOX: "" };
   const initErrors = {};
 
@@ -112,12 +112,18 @@ const JobRecheck: React.FC = () => {
 
     let job = value.split("|");
 
+    let jobOrder = [...orderData?.data?.data];
+
+    let BOX_QTY = jobOrder.filter((value: any) => {
+      return value.JOB_ID === parseInt(job[0]);
+    })[0].BOX_QTY;
+
     setOrder({
       ...order,
       JOB: value,
       JOB_ID: job[0],
       JOB_QTY: parseInt(job[1]),
-      BOX_QTY: parseInt(job[2]),
+      BOX_QTY: parseInt(BOX_QTY),
     });
   };
 
@@ -132,7 +138,11 @@ const JobRecheck: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
+    setItem({
+      ...item,
+      QR_NO: qr?.QR_NO || "",
+      Item_ID: qr?.Item_ID || "",
+    });
 
     refScanner.current = true;
   };
@@ -148,7 +158,7 @@ const JobRecheck: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setBox({ ...qr, QR_NO_BOX: qr?.QR_NO || "" });
+    setBox({ ...box, QR_NO_BOX: qr?.QR_NO || "" });
 
     refScannerBox.current = true;
   };
@@ -198,8 +208,18 @@ const JobRecheck: React.FC = () => {
       return false;
     }
 
+    if (
+      bomData.data.data.filter((value: any) => {
+        return value.Item_ID == item.Item_ID && value.Actual == value.BOM;
+      }).length > 0
+    ) {
+      setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
+      clearState("Item");
+      return false;
+    }
+
     if (QRType === "Item") {
-      if (!item.QR_NO || !item.Tag_ID) {
+      if (!item.QR_NO) {
         setErrors({ ...errors, QR_NO: "Invalid QR format" });
         clearState("Item");
         return false;
@@ -225,7 +245,7 @@ const JobRecheck: React.FC = () => {
     } else if (type === "Item") {
       setItem(initItem);
     } else if (type === "Box") {
-      setItem(initBox);
+      setBox(initBox);
     } else if (type === "Order") {
       setOrder(initOrder);
     } else {
@@ -238,20 +258,24 @@ const JobRecheck: React.FC = () => {
   }, [order]);
 
   useEffect(() => {
-    if (refScanner.current) {
-      validateErrors("Item") && itemMutate({ ...order, ...item });
+    if (refScanner.current && validateErrors("Item")) {
+      itemMutate({ ...order, ...item });
     }
   }, [item]);
 
   useEffect(() => {
-    if (refScannerBox.current) {
-      validateErrors("Box") && transMutate({ ...order, ...box });
+    if (refScannerBox.current && validateErrors("Box")) {
+      transMutate({ ...order, ...box });
     }
   }, [box]);
 
+  useEffect(()=>{
+    handleChangeOrder(order.JOB);
+  },[orderData])
+
   useEffect(() => {
-    calculateBox();
     calculateItem();
+    calculateBox();
   }, [bomData]);
 
   useEffect(() => {
@@ -350,6 +374,7 @@ const JobRecheck: React.FC = () => {
 
   useEffect(() => {
     refInput?.current?.focus();
+    refInputBox?.current?.focus();
   });
 
   return (
@@ -374,7 +399,7 @@ const JobRecheck: React.FC = () => {
                       <Select.Item
                         key={value.JOB_ID}
                         label={value.JOB_No}
-                        value={`${value.JOB_ID}|${value.JOB_QTY}|${value.BOX_QTY}`}
+                        value={`${value.JOB_ID}|${value.JOB_QTY}`}
                       />
                     );
                   })}
@@ -493,7 +518,9 @@ const JobRecheck: React.FC = () => {
                   )}
                 </FormControl>
 
-                <Text fontSize={25}>{`0/${order?.JOB_QTY || 0} BOX`}</Text>
+                <Text fontSize={25}>{`${order?.BOX_QTY || 0}/${
+                  order?.JOB_QTY || 0
+                } BOX`}</Text>
               </HStack>
               <Button
                 backgroundColor="green.600"

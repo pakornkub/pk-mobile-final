@@ -33,7 +33,7 @@ import {
 
 const CountStock: React.FC = () => {
   const initOrder = { CountStock_ID: "" };
-  const initItem = { QR_NO: "", Tag_ID: "" };
+  const initItem = { QR_NO: "" };
   const initErrors = {};
 
   const toast = useToast();
@@ -105,7 +105,7 @@ const CountStock: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
+    setItem({ ...item, QR_NO: qr?.QR_NO || "" });
 
     refScanner.current = true;
   };
@@ -115,9 +115,9 @@ const CountStock: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    const sumLock =
+    const sumActual =
       itemData?.data?.data?.reduce((previousValue: any, currentValue: any) => {
-        return previousValue + parseInt(currentValue.Lock);
+        return previousValue + parseInt(currentValue.Actual);
       }, 0) || 0;
 
     const sumTotal =
@@ -125,7 +125,7 @@ const CountStock: React.FC = () => {
         return previousValue + parseInt(currentValue.Total);
       }, 0) || 0;
 
-    if (parseInt(sumLock) === parseInt(sumTotal) && parseInt(sumLock) !== 0) {
+    if (parseInt(sumActual) === parseInt(sumTotal) && parseInt(sumActual) !== 0) {
       setDisabledButton(false);
     }
   };
@@ -134,7 +134,7 @@ const CountStock: React.FC = () => {
     refScanner.current = false;
 
     if (!order.CountStock_ID) {
-      setErrors({ ...errors, CountStock_ID: "Receive Order is required" });
+      setErrors({ ...errors, CountStock_ID: "Count Stock Order is required" });
       clearState("Item");
       return false;
     }
@@ -168,8 +168,8 @@ const CountStock: React.FC = () => {
   }, [order]);
 
   useEffect(() => {
-    if (refScanner.current) {
-      validateErrors() && createMutate({ ...order, ...item });
+    if (refScanner.current && validateErrors()) {
+      createMutate({ ...order, ...item });
     }
   }, [item]);
 
@@ -189,7 +189,6 @@ const CountStock: React.FC = () => {
         placement: "top",
         duration: 2000,
       });
- 
     } else if (createStatus === "error") {
       toast.show({
         render: () => (
@@ -207,11 +206,9 @@ const CountStock: React.FC = () => {
       refScanner.current = false;
       clearState("Item");
     };
-
   }, [createStatus]);
 
   useEffect(() => {
-    
     if (updateStatus === "success") {
       toast.show({
         render: () => (
@@ -240,7 +237,6 @@ const CountStock: React.FC = () => {
     return () => {
       refScanner.current = false;
     };
-
   }, [updateStatus]);
 
   useEffect(() => {
@@ -260,7 +256,7 @@ const CountStock: React.FC = () => {
                   size={20}
                   width={"100%"}
                   accessibilityLabel="Choose Service"
-                  placeholder="RECEIVE SP ORDER NO."
+                  placeholder="COUNT STOCK ORDER NO."
                   selectedValue={order?.CountStock_ID || ""}
                   onValueChange={(value) => handleChangeOrder(value)}
                 >
@@ -269,7 +265,7 @@ const CountStock: React.FC = () => {
                       <Select.Item
                         key={value.CountStock_ID}
                         shadow={2}
-                        label={value.Rec_NO}
+                        label={value.CountStock_DocNO}
                         value={value.CountStock_ID}
                       />
                     );
@@ -323,9 +319,9 @@ const CountStock: React.FC = () => {
                       <DataTable.Title style={{ maxWidth: "10%" }}>
                         NO.
                       </DataTable.Title>
-                      <DataTable.Title>SP</DataTable.Title>
-                      <DataTable.Title numeric>LOCK</DataTable.Title>
-                      <DataTable.Title numeric>TOTAL</DataTable.Title>
+                      <DataTable.Title>SP/FG</DataTable.Title>
+                      <DataTable.Title numeric>Balance</DataTable.Title>
+                      <DataTable.Title numeric>Actual</DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (

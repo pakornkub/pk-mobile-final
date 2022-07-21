@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TouchableWithoutFeedback, Keyboard,ScrollView,RefreshControl } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import {
   Box,
   Input,
@@ -20,7 +25,7 @@ import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 
 const CheckStock: React.FC = () => {
-  const initItem = { QR_NO: "", Tag_ID: "" };
+  const initItem = { QR_NO: "" };
   const initErrors = {};
 
   const toast = useToast();
@@ -40,7 +45,7 @@ const CheckStock: React.FC = () => {
     data: itemData,
     refetch: itemRefetch,
   } = useCheckStock({
-    Tag_ID: item?.Tag_ID || "",
+    QR_NO: item?.QR_NO || "",
   });
 
   const handleScanner = (value: any) => {
@@ -54,7 +59,7 @@ const CheckStock: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
+    setItem({ ...item, QR_NO: qr?.QR_NO || "" });
 
     refScanner.current = true;
   };
@@ -62,7 +67,7 @@ const CheckStock: React.FC = () => {
   const validateErrors = () => {
     refScanner.current = false;
 
-    if (!item.QR_NO || !item.Tag_ID) {
+    if (!item.QR_NO) {
       setErrors({ ...errors, QR_NO: "Invalid QR format" });
       clearState("Item");
       return false;
@@ -80,8 +85,8 @@ const CheckStock: React.FC = () => {
   };
 
   useEffect(() => {
-    if (refScanner.current) {
-      validateErrors() && itemRefetch();
+    if (refScanner.current && validateErrors()) {
+      itemRefetch();
     }
   }, [item]);
 
@@ -151,23 +156,68 @@ const CheckStock: React.FC = () => {
                   />
                 }
               >
-                <Text fontSize="md"><Text style={styles.textHeader}>QR :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.QR_NO || ""}</Text></Text>
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>QR :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.QR_NO || ""}
+                  </Text>
+                </Text>
                 <Divider style={styles.divder} />
-                <Text fontSize="md"><Text style={styles.textHeader}>ORDER :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Rec_NO || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>ORDER DATE :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Rec_Datetime || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>ITEM :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.ITEM_CODE || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>DESCRIPTION :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.ITEM_DESCRIPTION || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>CREATE BY :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Create_By || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>CREATE DATE :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Create_Date || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>STATUS :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Status_Item || ""}</Text></Text>
-                <Divider style={styles.divder}/>
-                <Text fontSize="md"><Text style={styles.textHeader}>LOCATION :{`   `}</Text><Text style={styles.textContent}>{itemData?.data?.data?.Location || ""}</Text></Text>
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>ORDER :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Rec_NO || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>ORDER DATE :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Rec_Datetime || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>ITEM :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.ITEM_CODE || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>DESCRIPTION :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.ITEM_DESCRIPTION || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>CREATE BY :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Create_By || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>CREATE DATE :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Create_Date || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>STATUS :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Status_Item || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>LOCATION :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.Location || ""}
+                  </Text>
+                </Text>
               </ScrollView>
             </VStack>
           </Box>
@@ -179,19 +229,17 @@ const CheckStock: React.FC = () => {
   );
 };
 
-const styles : any = {
-
-  divder : {
+const styles: any = {
+  divder: {
     marginTop: 10,
     marginBottom: 10,
   },
   textHeader: {
     fontWeight: "bold",
   },
-  textContent:{
+  textContent: {
     color: "gray",
-  }
-  
-}
+  },
+};
 
 export default CheckStock;

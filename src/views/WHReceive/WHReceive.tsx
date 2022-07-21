@@ -28,7 +28,7 @@ import { useCheckStock } from "../../hooks/useCheckStock";
 import { useUpdateWHReceive } from "../../hooks/useWHReceive";
 
 const WHReceive: React.FC = () => {
-  const initItem = { QR_NO: "", Tag_ID: "" };
+  const initItem = { QR_NO: "" };
   const initItems: any[] = [];
   const initErrors = {};
 
@@ -52,7 +52,7 @@ const WHReceive: React.FC = () => {
     data: itemData,
     refetch: itemRefetch,
   } = useCheckStock({
-    Tag_ID: item?.Tag_ID || "",
+    QR_NO: item?.QR_NO || "",
   });
 
   const {
@@ -76,9 +76,8 @@ const WHReceive: React.FC = () => {
     const qr = getDataFromQR(value);
 
     setItem({
-      ...qr,
+      ...item,
       QR_NO: qr?.QR_NO || "",
-      Tag_ID: qr?.Tag_ID || "",
     });
 
     refScanner.current = true;
@@ -89,7 +88,7 @@ const WHReceive: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    if (parseInt(items.length) === 10) {
+    if (parseInt(items.length) <= 10 && parseInt(items.length) > 0) {
       setDisabledButton(false);
     }
   };
@@ -97,7 +96,7 @@ const WHReceive: React.FC = () => {
   const validateErrors = () => {
     refScanner.current = false;
 
-    if (!item.QR_NO || !item.Tag_ID) {
+    if (!item.QR_NO) {
       setErrors({ ...errors, QR_NO: "Invalid QR format" });
       clearState("Item");
       return false;
@@ -227,7 +226,7 @@ const WHReceive: React.FC = () => {
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <AppLoadingScreen show={itemIsLoading} />
+            <AppLoadingScreen show={itemIsLoading || updateIsLoading} />
             <VStack space={10} p={5}>
               <FormControl isRequired isInvalid={"QR_NO" in errors}>
                 <Input

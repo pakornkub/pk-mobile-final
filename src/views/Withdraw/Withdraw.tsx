@@ -28,7 +28,7 @@ import { useCheckStock } from "../../hooks/useCheckStock";
 import { useUpdateWithdraw } from "../../hooks/useWithdraw";
 
 const Withdraw: React.FC = () => {
-  const initItem = { QR_NO: "", Tag_ID: "" };
+  const initItem = { QR_NO: "" };
   const initItems: any[] = [];
   const initErrors = {};
 
@@ -52,7 +52,7 @@ const Withdraw: React.FC = () => {
     data: itemData,
     refetch: itemRefetch,
   } = useCheckStock({
-    Tag_ID: item?.Tag_ID || "",
+    QR_NO: item?.QR_NO || "",
   });
 
   const {
@@ -76,9 +76,8 @@ const Withdraw: React.FC = () => {
     const qr = getDataFromQR(value);
 
     setItem({
-      ...qr,
+      ...item,
       QR_NO: qr?.QR_NO || "",
-      Tag_ID: qr?.Tag_ID || "",
     });
 
     refScanner.current = true;
@@ -89,7 +88,7 @@ const Withdraw: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    if (parseInt(items.length) === 10) {
+    if (parseInt(items.length) <= 10 && parseInt(items.length) > 0) {
       setDisabledButton(false);
     }
   };
@@ -97,7 +96,7 @@ const Withdraw: React.FC = () => {
   const validateErrors = () => {
     refScanner.current = false;
 
-    if (!item.QR_NO || !item.Tag_ID) {
+    if (!item.QR_NO) {
       setErrors({ ...errors, QR_NO: "Invalid QR format" });
       clearState("Item");
       return false;

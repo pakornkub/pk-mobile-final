@@ -105,7 +105,7 @@ const ReceiveSP: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({ ...qr, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
+    setItem({ ...item, QR_NO: qr?.QR_NO || "", Tag_ID: qr?.Tag_ID || "" });
 
     refScanner.current = true;
   };
@@ -168,8 +168,8 @@ const ReceiveSP: React.FC = () => {
   }, [order]);
 
   useEffect(() => {
-    if (refScanner.current) {
-      validateErrors() && transMutate({ ...order, ...item });
+    if (refScanner.current && validateErrors()) {
+      transMutate({ ...order, ...item });
     }
   }, [item]);
 
@@ -189,7 +189,6 @@ const ReceiveSP: React.FC = () => {
         placement: "top",
         duration: 2000,
       });
- 
     } else if (transStatus === "error") {
       toast.show({
         render: () => (
@@ -207,11 +206,9 @@ const ReceiveSP: React.FC = () => {
       refScanner.current = false;
       clearState("Item");
     };
-
   }, [transStatus]);
 
   useEffect(() => {
-    
     if (updateStatus === "success") {
       toast.show({
         render: () => (
@@ -240,7 +237,6 @@ const ReceiveSP: React.FC = () => {
     return () => {
       refScanner.current = false;
     };
-
   }, [updateStatus]);
 
   useEffect(() => {
