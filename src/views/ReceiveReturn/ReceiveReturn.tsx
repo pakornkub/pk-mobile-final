@@ -14,7 +14,7 @@ import {
   VStack,
   Button,
   useToast,
-  FormControl,
+  FormControl,Text
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -141,6 +141,16 @@ const ReceiveReturn: React.FC = () => {
 
     if (!item.QR_NO || !item.Item_ID) {
       setErrors({ ...errors, QR_NO: "Invalid QR format" });
+      clearState("Item");
+      return false;
+    }
+
+    if (
+      itemData.data.data.filter((value: any) => {
+        return value.Item_ID == item.Item_ID && value.Good == value.Total;
+      }).length > 0
+    ) {
+      setErrors({ ...errors, QR_NO: "This Item Good Completed" });
       clearState("Item");
       return false;
     }
@@ -316,11 +326,11 @@ const ReceiveReturn: React.FC = () => {
                   <DataTable>
                     <DataTable.Header>
                       <DataTable.Title style={{ maxWidth: "10%" }}>
-                        NO.
+                        <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>FG</DataTable.Title>
-                      <DataTable.Title numeric>GOOD</DataTable.Title>
-                      <DataTable.Title numeric>TOTAL</DataTable.Title>
+                      <DataTable.Title><Text bold>FG</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>GOOD</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>TOTAL</Text></DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
@@ -329,7 +339,7 @@ const ReceiveReturn: React.FC = () => {
                             {value.No}
                           </DataTable.Title>
                           <DataTable.Cell>{value.FG}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.Good}</DataTable.Cell>
+                          <DataTable.Cell numeric><Text bold color={"green.600"}>{value.Good}</Text></DataTable.Cell>
                           <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
                         </DataTable.Row>
                       );

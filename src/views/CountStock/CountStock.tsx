@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   TouchableWithoutFeedback,
   Keyboard,
   RefreshControl,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   Box,
@@ -15,6 +16,7 @@ import {
   Button,
   useToast,
   FormControl,
+  Text,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -27,13 +29,13 @@ import AppAlert from "../../components/AppAlert";
 import {
   useCountStock,
   useCountStockItem,
-  useCreateCountStockItem,
+  useExecCountStockItem,
   useUpdateCountStock,
 } from "../../hooks/useCountStock";
 
 const CountStock: React.FC = () => {
   const initOrder = { CountStock_ID: "" };
-  const initItem = { QR_NO: "" };
+  const initItem = { QR_NO: "", Item_ID: "" };
   const initErrors = {};
 
   const toast = useToast();
@@ -73,7 +75,7 @@ const CountStock: React.FC = () => {
     error: createError,
     mutate: createMutate,
     data: createData,
-  } = useCreateCountStockItem();
+  } = useExecCountStockItem();
 
   const {
     isLoading: updateIsLoading,
@@ -84,53 +86,73 @@ const CountStock: React.FC = () => {
     data: updateData,
   } = useUpdateCountStock();
 
-  const handleChangeOrder = (value: string) => {
-    if (!value) {
-      return;
-    }
+  const handleChangeOrder = useCallback(
+    (value: string) => {
+      if (!value) {
+        return;
+      }
 
-    clearState("Error");
+      clearState("Error");
 
-    setOrder({ ...order, CountStock_ID: value });
-  };
+      setOrder({ ...order, CountStock_ID: value });
+    },
+    [order]
+  );
 
-  const handleScanner = (value: any) => {
-    setCamera(false);
+  const handleScanner = useCallback(
+    (value: any) => {
+      setCamera(false);
 
-    if (!value) {
-      return;
-    }
+      if (!value) {
+        return;
+      }
 
-    clearState("Error");
+      clearState("Error");
 
-    const qr = getDataFromQR(value);
+      const qr = getDataFromQR(value);
 
-    setItem({ ...item, QR_NO: qr?.QR_NO || "" });
+      setItem({ ...item, QR_NO: qr?.QR_NO || "", Item_ID: qr?.Item_ID || "" });
 
-    refScanner.current = true;
-  };
+      refScanner.current = true;
+    },
+    [item]
+  );
 
-  const handleSubmit = () => {
-    updateMutate(order);
-  };
+  const handleSubmit = useCallback(() => {
+    Alert.alert("Alert", "Confirm Count Stock ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          updateMutate(order);
+        },
+      },
+    ]);
+  }, [order]);
 
-  const calculateTotal = () => {
+  const calculateTotal = useCallback(() => {
     const sumActual =
       itemData?.data?.data?.reduce((previousValue: any, currentValue: any) => {
         return previousValue + parseInt(currentValue.Actual);
       }, 0) || 0;
 
-    const sumTotal =
+    const sumBalance =
       itemData?.data?.data?.reduce((previousValue: any, currentValue: any) => {
-        return previousValue + parseInt(currentValue.Total);
+        return previousValue + parseInt(currentValue.Balance);
       }, 0) || 0;
 
-    if (parseInt(sumActual) === parseInt(sumTotal) && parseInt(sumActual) !== 0) {
+    if (
+      parseInt(sumActual) <= parseInt(sumBalance) &&
+      parseInt(sumActual) !== 0
+    ) {
       setDisabledButton(false);
     }
-  };
+  }, [itemData]);
 
-  const validateErrors = () => {
+  const validateErrors = useCallback(() => {
     refScanner.current = false;
 
     if (!order.CountStock_ID) {
@@ -139,16 +161,16 @@ const CountStock: React.FC = () => {
       return false;
     }
 
-    if (!item.QR_NO || !item.Tag_ID) {
+    if (!item.QR_NO || !item.Item_ID) {
       setErrors({ ...errors, QR_NO: "Invalid QR format" });
       clearState("Item");
       return false;
     }
 
     return true;
-  };
+  }, [order, item]);
 
-  const clearState = (type: string) => {
+  const clearState = useCallback((type: string) => {
     if (type === "All") {
       setOrder(initOrder);
       setItem(initItem);
@@ -161,7 +183,7 @@ const CountStock: React.FC = () => {
     } else {
       setErrors(initErrors);
     }
-  };
+  }, []);
 
   useEffect(() => {
     itemRefetch();
@@ -265,7 +287,7 @@ const CountStock: React.FC = () => {
                       <Select.Item
                         key={value.CountStock_ID}
                         shadow={2}
-                        label={value.CountStock_DocNO}
+                        label={value.CountStock_DocNo}
                         value={value.CountStock_ID}
                       />
                     );
@@ -317,11 +339,17 @@ const CountStock: React.FC = () => {
                   <DataTable>
                     <DataTable.Header>
                       <DataTable.Title style={{ maxWidth: "10%" }}>
-                        NO.
+                        <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>SP/FG</DataTable.Title>
-                      <DataTable.Title numeric>Balance</DataTable.Title>
-                      <DataTable.Title numeric>Actual</DataTable.Title>
+                      <DataTable.Title>
+                        <Text bold>SP/FG</Text>
+                      </DataTable.Title>
+                      <DataTable.Title numeric>
+                        <Text bold>Actual</Text>
+                      </DataTable.Title>
+                      <DataTable.Title numeric>
+                        <Text bold>Balance</Text>
+                      </DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
@@ -329,9 +357,15 @@ const CountStock: React.FC = () => {
                           <DataTable.Title style={{ maxWidth: "10%" }}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.SP}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.Lock}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
+                          <DataTable.Cell>{value.Item}</DataTable.Cell>
+                          <DataTable.Cell numeric>
+                            <Text bold color={"primary.600"}>
+                              {value.Actual}
+                            </Text>
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric>
+                            {value.Balance}
+                          </DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (

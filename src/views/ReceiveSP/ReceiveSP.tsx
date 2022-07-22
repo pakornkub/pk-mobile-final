@@ -14,7 +14,7 @@ import {
   VStack,
   Button,
   useToast,
-  FormControl,
+  FormControl,Text
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -317,11 +317,11 @@ const ReceiveSP: React.FC = () => {
                   <DataTable>
                     <DataTable.Header>
                       <DataTable.Title style={{ maxWidth: "10%" }}>
-                        NO.
+                      <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>SP</DataTable.Title>
-                      <DataTable.Title numeric>LOCK</DataTable.Title>
-                      <DataTable.Title numeric>TOTAL</DataTable.Title>
+                      <DataTable.Title><Text bold>SP</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>LOCK</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>TOTAL</Text></DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
@@ -330,7 +330,7 @@ const ReceiveSP: React.FC = () => {
                             {value.No}
                           </DataTable.Title>
                           <DataTable.Cell>{value.SP}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.Lock}</DataTable.Cell>
+                          <DataTable.Cell numeric><Text bold color={"red.600"}>{value.Lock}</Text></DataTable.Cell>
                           <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
                         </DataTable.Row>
                       );

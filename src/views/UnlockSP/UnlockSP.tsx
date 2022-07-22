@@ -14,7 +14,7 @@ import {
   VStack,
   Button,
   useToast,
-  FormControl,
+  FormControl,Text
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -29,7 +29,7 @@ import { useReceiveSPItem } from "../../hooks/useReceiveSP";
 import {
   useUnlockSP,
   useUpdateUnlockSP,
-  useUpdateUnlockSPTag,
+  useExecUnlockSPTag,
 } from "../../hooks/useUnlockSP";
 
 const UnlockSP: React.FC = () => {
@@ -83,7 +83,7 @@ const UnlockSP: React.FC = () => {
     error: tagError,
     mutate: tagMutate,
     data: tagData,
-  } = useUpdateUnlockSPTag();
+  } = useExecUnlockSPTag();
 
   const handleChangeOrder = (value: string) => {
     if (!value) {
@@ -317,11 +317,11 @@ const UnlockSP: React.FC = () => {
                   <DataTable>
                     <DataTable.Header>
                       <DataTable.Title style={{ maxWidth: "10%" }}>
-                        NO.
+                        <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>SP</DataTable.Title>
-                      <DataTable.Title numeric>UNLOCK</DataTable.Title>
-                      <DataTable.Title numeric>TOTAL</DataTable.Title>
+                      <DataTable.Title><Text bold>SP</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>UNLOCK</Text></DataTable.Title>
+                      <DataTable.Title numeric><Text bold>TOTAL</Text></DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
@@ -331,7 +331,7 @@ const UnlockSP: React.FC = () => {
                           </DataTable.Title>
                           <DataTable.Cell>{value.SP}</DataTable.Cell>
                           <DataTable.Cell numeric>
-                            {value.Unlock}
+                            <Text bold color={"green.600"}>{value.Unlock}</Text>
                           </DataTable.Cell>
                           <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
                         </DataTable.Row>

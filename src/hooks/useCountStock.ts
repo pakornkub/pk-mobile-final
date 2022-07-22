@@ -32,23 +32,23 @@ export const useCountStockItem = ({CountStock_ID}: any) => {
   );
 };
 
-export const useCreateCountStockItem = () => {
+export const useExecCountStockItem = () => {
 
   const queryClient = useQueryClient();
 
-  const createCountStockItem = async (params: any): Promise<any> => {
+  const execCountStockItem = async (params: any): Promise<any> => {
     let data = new FormData();
 
     Object.keys(params).forEach((value) => {
       data.append(value, params[value] || "");
     });
 
-    return await httpClient.post("/create_count_stock_item", data);
+    return await httpClient.post("/exec_count_stock_item", data);
   };
 
   return useMutation<any, any, any>(
-    "CreateCountStockItem",
-    (params) => createCountStockItem(params),
+    "ExecCountStockItem",
+    (params) => execCountStockItem(params),
     {
       onSuccess: (response) => {
 

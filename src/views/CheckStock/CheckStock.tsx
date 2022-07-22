@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,useCallback } from "react";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -48,7 +48,7 @@ const CheckStock: React.FC = () => {
     QR_NO: item?.QR_NO || "",
   });
 
-  const handleScanner = (value: any) => {
+  const handleScanner = useCallback((value: any) => {
     setCamera(false);
 
     if (!value) {
@@ -62,9 +62,10 @@ const CheckStock: React.FC = () => {
     setItem({ ...item, QR_NO: qr?.QR_NO || "" });
 
     refScanner.current = true;
-  };
 
-  const validateErrors = () => {
+  },[item]);
+
+  const validateErrors = useCallback(() => {
     refScanner.current = false;
 
     if (!item.QR_NO) {
@@ -74,15 +75,15 @@ const CheckStock: React.FC = () => {
     }
 
     return true;
-  };
+  },[item,errors]);
 
-  const clearState = (type: string) => {
+  const clearState = useCallback((type: string) => {
     if (type === "Item") {
       setItem(initItem);
     } else {
       setErrors(initErrors);
     }
-  };
+  },[]);
 
   useEffect(() => {
     if (refScanner.current && validateErrors()) {
@@ -164,16 +165,23 @@ const CheckStock: React.FC = () => {
                 </Text>
                 <Divider style={styles.divder} />
                 <Text fontSize="md">
-                  <Text style={styles.textHeader}>ORDER :{`   `}</Text>
+                  <Text style={styles.textHeader}>RECEIVE :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Rec_NO || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divder} />
                 <Text fontSize="md">
-                  <Text style={styles.textHeader}>ORDER DATE :{`   `}</Text>
+                  <Text style={styles.textHeader}>RECEIVE DATE :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Rec_Datetime || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>JOB :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.JOB_No || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divder} />
@@ -181,6 +189,13 @@ const CheckStock: React.FC = () => {
                   <Text style={styles.textHeader}>ITEM :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.ITEM_CODE || ""}
+                  </Text>
+                </Text>
+                <Divider style={styles.divder} />
+                <Text fontSize="md">
+                  <Text style={styles.textHeader}>LOT :{`   `}</Text>
+                  <Text style={styles.textContent}>
+                    {itemData?.data?.data?.LOT || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divder} />
@@ -208,14 +223,14 @@ const CheckStock: React.FC = () => {
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>STATUS :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Status_Item || ""}
+                    {itemData?.data?.data?.ItemStatus_Des || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divder} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>LOCATION :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Location || ""}
+                    {itemData?.data?.data?.Location_Des || ""}
                   </Text>
                 </Text>
               </ScrollView>

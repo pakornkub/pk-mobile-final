@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   FormControl,
@@ -32,9 +32,9 @@ const Login: React.FC = () => {
   const { isLoading, isError, error, status, mutate } = useAuthLogin();
   const [show, setShow] = useState<boolean>(false);
 
-  const onSubmit: SubmitHandler<IAuthLoginParams> = (data) => {
+  const onSubmit: SubmitHandler<IAuthLoginParams> = useCallback((data) => {
     mutate(data);
-  };
+  },[]);
 
   useEffect(() => {
     if (status === "success") {

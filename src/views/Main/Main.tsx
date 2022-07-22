@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, HStack, Pressable } from "native-base";
 import { Alert } from "react-native";
@@ -21,6 +21,7 @@ import ShipToWH from "../../views/ShipToWH";
 import WHReceive from "../../views/WHReceive";
 import Withdraw from "../../views/Withdraw";
 import CheckStock from "../../views/CheckStock";
+import CountStock from "../../views/CountStock";
 
 const Login = React.lazy(() => import("../Login"));
 const Menu = React.lazy(() => import("../Menu"));
@@ -35,7 +36,7 @@ const Main: React.FC = () => {
   const dispatch = useDispatch();
   const { authResult } = useSelector(selectAuth);
 
-  const validateToken = async () => {
+  const validateToken = useCallback(async () => {
     try {
       //? get token, status from AsyncStorage
       const auth: any = JSON.parse(
@@ -66,9 +67,9 @@ const Main: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  },[authResult]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     Alert.alert(
       "Alert",
       authResult?.data.UserName + " : Confirm Logout or Not ?",
@@ -85,7 +86,7 @@ const Main: React.FC = () => {
         },
       ]
     );
-  };
+  },[authResult]);
 
   useEffect(() => {
     validateToken();
@@ -144,6 +145,7 @@ const Main: React.FC = () => {
             <Stack.Screen name="WHReceive" component={WHReceive} />
             <Stack.Screen name="Withdraw" component={Withdraw} />
             <Stack.Screen name="CheckStock" component={CheckStock} />
+            <Stack.Screen name="CountStock" component={CountStock} />
             <Stack.Screen name="AppScanner" component={AppScanner} />
           </>
         ) : (

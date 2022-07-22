@@ -270,9 +270,9 @@ const JobRepack: React.FC = () => {
     }
   }, [box]);
 
-  useEffect(()=>{
+  useEffect(() => {
     handleChangeOrder(order.JOB);
-  },[orderData])
+  }, [orderData]);
 
   useEffect(() => {
     calculateItem();
@@ -419,7 +419,7 @@ const JobRepack: React.FC = () => {
                   showSoftInputOnFocus={false}
                   variant="underlined"
                   p={2}
-                  placeholder="QR SP"
+                  placeholder="SCAN QR SP"
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
@@ -488,7 +488,6 @@ const JobRepack: React.FC = () => {
               </ScrollView>
               <HStack alignItems={"center"} justifyContent={"space-between"}>
                 <FormControl
-                  h={50}
                   w="50%"
                   isRequired
                   isInvalid={"QR_NO_BOX" in errors}
@@ -519,9 +518,12 @@ const JobRepack: React.FC = () => {
                   )}
                 </FormControl>
 
-                <Text fontSize={25}>{`${order?.BOX_QTY || 0}/${
-                  order?.JOB_QTY || 0
-                } BOX`}</Text>
+                <Text fontSize={25}>
+                  <Text bold color={"green.600"}>{`${
+                    order?.BOX_QTY || 0
+                  }`}</Text>
+                  {` / ${order?.JOB_QTY || 0} BOX`}
+                </Text>
               </HStack>
               <Button
                 backgroundColor="green.600"

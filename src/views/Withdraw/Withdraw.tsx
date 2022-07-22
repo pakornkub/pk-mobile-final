@@ -102,6 +102,12 @@ const Withdraw: React.FC = () => {
       return false;
     }
 
+    if (!itemData.data.status) {
+      setErrors({ ...errors, QR_NO: `${itemData.data.message}` });
+      clearState("Item");
+      return false;
+    }
+
     if (
       !itemData.data.data.Location_ID ||
       parseInt(itemData.data.data.Location_ID) !== 1
@@ -254,10 +260,10 @@ const Withdraw: React.FC = () => {
                   <DataTable>
                     <DataTable.Header>
                       <DataTable.Title style={{ maxWidth: "10%" }}>
-                        NO.
+                        <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>QR NO.</DataTable.Title>
-                      <DataTable.Title>ITEM DESCRIPTION</DataTable.Title>
+                      <DataTable.Title> <Text bold>QR NO.</Text></DataTable.Title>
+                      <DataTable.Title> <Text bold>ITEM DESCRIPTION</Text></DataTable.Title>
                     </DataTable.Header>
                     {items.length > 0 ? (
                       items.map((value: any, key: number) => {
@@ -283,7 +289,7 @@ const Withdraw: React.FC = () => {
               </ScrollView>
               <HStack alignItems={"center"} justifyContent={"space-between"}>
                 <Text fontSize={25}>{`WITHDRAW`}</Text>
-                <Text fontSize={25}>{`${items.length || 0}/10 TOTAL`}</Text>
+                <Text fontSize={25}><Text bold color={'red.600'}>{`${items.length || 0}`}</Text>{` / 10 TOTAL`}</Text>
               </HStack>
               <Button
                 backgroundColor="green.600"

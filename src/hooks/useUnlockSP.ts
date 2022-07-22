@@ -49,23 +49,23 @@ export const useUpdateUnlockSP = () => {
   );
 };
 
-export const useUpdateUnlockSPTag = () => {
+export const useExecUnlockSPTag = () => {
 
   const queryClient = useQueryClient();
 
-  const updateUnlockSPTag = async (params: any): Promise<any> => {
+  const execUnlockSPTag = async (params: any): Promise<any> => {
     let data = new FormData();
-
+console.log(params)
     Object.keys(params).forEach((value) => {
       data.append(value, params[value] || "");
     });
 
-    return await httpClient.post("/update_unlock_sp_tag", data);
+    return await httpClient.post("/exec_unlock_sp_tag", data);
   };
 
   return useMutation<any, any, any>(
-    "UpdateUnlockSPTag",
-    (params) => updateUnlockSPTag(params),
+    "ExecUnlockSPTag",
+    (params) => execUnlockSPTag(params),
     {
       onSuccess: (response) => {
 

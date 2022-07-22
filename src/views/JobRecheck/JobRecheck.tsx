@@ -418,7 +418,7 @@ const JobRecheck: React.FC = () => {
                   showSoftInputOnFocus={false}
                   variant="underlined"
                   p={2}
-                  placeholder="QR FG"
+                  placeholder="SCAN QR FG"
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
@@ -487,7 +487,6 @@ const JobRecheck: React.FC = () => {
               </ScrollView>
               <HStack alignItems={"center"} justifyContent={"space-between"}>
                 <FormControl
-                  h={50}
                   w="50%"
                   isRequired
                   isInvalid={"QR_NO_BOX" in errors}
@@ -518,7 +517,7 @@ const JobRecheck: React.FC = () => {
                   )}
                 </FormControl>
 
-                <Text fontSize={25}>{`${order?.BOX_QTY || 0}/${
+                <Text fontSize={25}><Text bold color={'green.600'}>{`${order?.BOX_QTY || 0}`}</Text>{` / ${
                   order?.JOB_QTY || 0
                 } BOX`}</Text>
               </HStack>
