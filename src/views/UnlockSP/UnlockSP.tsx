@@ -14,7 +14,8 @@ import {
   VStack,
   Button,
   useToast,
-  FormControl,Text
+  FormControl,
+  Text,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -173,7 +174,7 @@ const UnlockSP: React.FC = () => {
 
   useEffect(() => {
     if (refScanner.current && validateErrors()) {
-       tagMutate({ ...order, ...item });
+      tagMutate({ ...order, ...item });
     }
   }, [item]);
 
@@ -288,7 +289,8 @@ const UnlockSP: React.FC = () => {
                   placeholder="SCAN QR"
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                     />
@@ -319,9 +321,15 @@ const UnlockSP: React.FC = () => {
                       <DataTable.Title style={{ maxWidth: "10%" }}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title><Text bold>SP</Text></DataTable.Title>
-                      <DataTable.Title numeric><Text bold>UNLOCK</Text></DataTable.Title>
-                      <DataTable.Title numeric><Text bold>TOTAL</Text></DataTable.Title>
+                      <DataTable.Title>
+                        <Text bold>SP</Text>
+                      </DataTable.Title>
+                      <DataTable.Title numeric>
+                        <Text bold>UNLOCK</Text>
+                      </DataTable.Title>
+                      <DataTable.Title numeric>
+                        <Text bold>TOTAL</Text>
+                      </DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
@@ -331,7 +339,9 @@ const UnlockSP: React.FC = () => {
                           </DataTable.Title>
                           <DataTable.Cell>{value.SP}</DataTable.Cell>
                           <DataTable.Cell numeric>
-                            <Text bold color={"green.600"}>{value.Unlock}</Text>
+                            <Text bold color={"green.600"}>
+                              {value.Unlock}
+                            </Text>
                           </DataTable.Cell>
                           <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
                         </DataTable.Row>

@@ -64,6 +64,7 @@ const JobRecheck: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useJobRecheck();
@@ -269,9 +270,9 @@ const JobRecheck: React.FC = () => {
     }
   }, [box]);
 
-  useEffect(()=>{
+  useEffect(() => {
     handleChangeOrder(order.JOB);
-  },[orderData])
+  }, [orderData]);
 
   useEffect(() => {
     calculateItem();
@@ -422,7 +423,8 @@ const JobRecheck: React.FC = () => {
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                       disabled={disabledItem}
@@ -444,7 +446,7 @@ const JobRecheck: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={bomIsLoading}
-                    onRefresh={() => bomRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >
@@ -458,10 +460,10 @@ const JobRecheck: React.FC = () => {
                         <Text bold>FG</Text>
                       </DataTable.Title>
                       <DataTable.Title numeric>
-                        <Text bold>BOM</Text>
+                        <Text bold>ACTUAL</Text>
                       </DataTable.Title>
                       <DataTable.Title numeric>
-                        <Text bold>ACTUAL</Text>
+                        <Text bold>BOM</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {bomData?.data?.data?.map((value: any, key: number) => {
@@ -471,10 +473,12 @@ const JobRecheck: React.FC = () => {
                             {value.No}
                           </DataTable.Title>
                           <DataTable.Cell>{value.FG}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
                           <DataTable.Cell numeric>
-                            {value.Actual}
+                            <Text bold color={"red.600"}>
+                              {value.Actual}
+                            </Text>
                           </DataTable.Cell>
+                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (
@@ -493,6 +497,7 @@ const JobRecheck: React.FC = () => {
                   isDisabled={disabledBox}
                 >
                   <Input
+                    h={50}
                     size={20}
                     ref={refInputBox}
                     showSoftInputOnFocus={false}
@@ -501,7 +506,8 @@ const JobRecheck: React.FC = () => {
                     placeholder="QR BOX"
                     InputRightElement={
                       <Icon
-                        size={25}
+                        size={35}
+                        color={"primary.600"}
                         as={<MaterialIcons name="qr-code-scanner" />}
                         onPress={() => setCamera2(true)}
                         disabled={disabledBox}
@@ -517,9 +523,12 @@ const JobRecheck: React.FC = () => {
                   )}
                 </FormControl>
 
-                <Text fontSize={25}><Text bold color={'green.600'}>{`${order?.BOX_QTY || 0}`}</Text>{` / ${
-                  order?.JOB_QTY || 0
-                } BOX`}</Text>
+                <Text fontSize={25}>
+                  <Text bold color={"green.600"}>{`${
+                    order?.BOX_QTY || 0
+                  }`}</Text>
+                  {` / ${order?.JOB_QTY || 0} BOX`}
+                </Text>
               </HStack>
               <Button
                 backgroundColor="green.600"

@@ -28,7 +28,7 @@ import { useCheckStock } from "../../hooks/useCheckStock";
 import { useUpdateShipToWH } from "../../hooks/useShipToWH";
 
 const ShipToWH: React.FC = () => {
-  const initItem = { QR_NO: ""};
+  const initItem = { QR_NO: "" };
   const initItems: any[] = [];
   const initErrors = {};
 
@@ -145,7 +145,7 @@ const ShipToWH: React.FC = () => {
       return false;
     }
 
-    if (parseInt(items.length) === 10) {
+    if (parseInt(items.length) === 12) {
       setErrors({ ...errors, QR_NO: "Total completed can not scan" });
       clearState("Item");
       return false;
@@ -245,7 +245,8 @@ const ShipToWH: React.FC = () => {
                   placeholder="SCAN QR"
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                     />
@@ -270,8 +271,12 @@ const ShipToWH: React.FC = () => {
                       <DataTable.Title style={{ maxWidth: "10%" }}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title><Text bold>QR NO.</Text></DataTable.Title>
-                      <DataTable.Title><Text bold>ITEM DESCRIPTION</Text></DataTable.Title>
+                      <DataTable.Title>
+                        <Text bold>QR NO.</Text>
+                      </DataTable.Title>
+                      <DataTable.Title>
+                        <Text bold>ITEM DESCRIPTION</Text>
+                      </DataTable.Title>
                     </DataTable.Header>
                     {items.length > 0 ? (
                       items.map((value: any, key: number) => {
@@ -297,7 +302,10 @@ const ShipToWH: React.FC = () => {
               </ScrollView>
               <HStack alignItems={"center"} justifyContent={"space-between"}>
                 <Text fontSize={25}>{`SHIP TO WH`}</Text>
-                <Text fontSize={25}><Text bold color={'green.600'}>{`${items.length || 0}`}</Text>{` / 10 TOTAL`}</Text>
+                <Text fontSize={25}>
+                  <Text bold color={"green.600"}>{`${items.length || 0}`}</Text>
+                  {` / 12 TOTAL`}
+                </Text>
               </HStack>
               <Button
                 backgroundColor="green.600"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -48,22 +48,24 @@ const CheckStock: React.FC = () => {
     QR_NO: item?.QR_NO || "",
   });
 
-  const handleScanner = useCallback((value: any) => {
-    setCamera(false);
+  const handleScanner = useCallback(
+    (value: any) => {
+      setCamera(false);
 
-    if (!value) {
-      return;
-    }
+      if (!value) {
+        return;
+      }
 
-    clearState("Error");
+      clearState("Error");
 
-    const qr = getDataFromQR(value);
+      const qr = getDataFromQR(value);
 
-    setItem({ ...item, QR_NO: qr?.QR_NO || "" });
+      setItem({ ...item, QR_NO: qr?.QR_NO || "" });
 
-    refScanner.current = true;
-
-  },[item]);
+      refScanner.current = true;
+    },
+    [item]
+  );
 
   const validateErrors = useCallback(() => {
     refScanner.current = false;
@@ -75,7 +77,7 @@ const CheckStock: React.FC = () => {
     }
 
     return true;
-  },[item,errors]);
+  }, [item, errors]);
 
   const clearState = useCallback((type: string) => {
     if (type === "Item") {
@@ -83,7 +85,7 @@ const CheckStock: React.FC = () => {
     } else {
       setErrors(initErrors);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (refScanner.current && validateErrors()) {
@@ -133,7 +135,8 @@ const CheckStock: React.FC = () => {
                   placeholder="SCAN QR"
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                     />

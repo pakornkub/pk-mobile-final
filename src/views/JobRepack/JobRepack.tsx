@@ -64,6 +64,7 @@ const JobRepack: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useJobRepack();
@@ -423,7 +424,8 @@ const JobRepack: React.FC = () => {
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                       disabled={disabledItem}
@@ -445,7 +447,7 @@ const JobRepack: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={bomIsLoading}
-                    onRefresh={() => bomRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >
@@ -459,10 +461,10 @@ const JobRepack: React.FC = () => {
                         <Text bold>SP</Text>
                       </DataTable.Title>
                       <DataTable.Title numeric>
-                        <Text bold>BOM</Text>
+                        <Text bold>ACTUAL</Text>
                       </DataTable.Title>
                       <DataTable.Title numeric>
-                        <Text bold>ACTUAL</Text>
+                        <Text bold>BOM</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {bomData?.data?.data?.map((value: any, key: number) => {
@@ -472,10 +474,12 @@ const JobRepack: React.FC = () => {
                             {value.No}
                           </DataTable.Title>
                           <DataTable.Cell>{value.SP}</DataTable.Cell>
-                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
                           <DataTable.Cell numeric>
-                            {value.Actual}
+                            <Text bold color={"red.600"}>
+                              {value.Actual}
+                            </Text>
                           </DataTable.Cell>
+                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (
@@ -494,6 +498,7 @@ const JobRepack: React.FC = () => {
                   isDisabled={disabledBox}
                 >
                   <Input
+                    h={50}
                     size={20}
                     ref={refInputBox}
                     showSoftInputOnFocus={false}
@@ -502,7 +507,8 @@ const JobRepack: React.FC = () => {
                     placeholder="QR BOX"
                     InputRightElement={
                       <Icon
-                        size={25}
+                        size={35}
+                        color={"primary.600"}
                         as={<MaterialIcons name="qr-code-scanner" />}
                         onPress={() => setCamera2(true)}
                         disabled={disabledBox}

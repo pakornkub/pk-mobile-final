@@ -310,7 +310,8 @@ const CountStock: React.FC = () => {
                   placeholder="SCAN QR"
                   InputRightElement={
                     <Icon
-                      size={25}
+                      size={35}
+                      color={"primary.600"}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                     />
