@@ -34,6 +34,8 @@ import {
   useExecJobRecheckItem,
 } from "../../hooks/useJobRecheck";
 
+import { styles } from "../styles";
+
 const JobRecheck: React.FC = () => {
   const initOrder = {};
   const initItem = { QR_NO: "", Item_ID: "" };
@@ -211,7 +213,7 @@ const JobRecheck: React.FC = () => {
 
     if (
       bomData.data.data.filter((value: any) => {
-        return value.Item_ID == item.Item_ID && value.Actual == value.BOM;
+        return parseInt(value.Item_ID) === parseInt(item.Item_ID) && parseInt(value.Actual) === parseInt(value.BOM);
       }).length > 0
     ) {
       setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
@@ -453,32 +455,36 @@ const JobRecheck: React.FC = () => {
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
+                      <DataTable.Title style={styles.table_title_54}>
                         <Text bold>FG</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
-                        <Text bold>ACTUAL</Text>
+                      <DataTable.Title numeric style={styles.table_title_18}>
+                        <Text bold>ACT</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
+                      <DataTable.Title numeric style={styles.table_title_18}>
                         <Text bold>BOM</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {bomData?.data?.data?.map((value: any, key: number) => {
                       return (
                         <DataTable.Row key={key}>
-                          <DataTable.Title style={{ maxWidth: "10%" }}>
+                          <DataTable.Title style={styles.table_title_10}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.FG}</DataTable.Cell>
-                          <DataTable.Cell numeric>
+                          <DataTable.Cell style={styles.table_title_54}>
+                            {value.FG}
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"red.600"}>
                               {value.Actual}
                             </Text>
                           </DataTable.Cell>
-                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
+                            {value.BOM}
+                          </DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (

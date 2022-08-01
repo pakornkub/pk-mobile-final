@@ -32,6 +32,8 @@ import {
   useUpdateReceiveSP,
 } from "../../hooks/useReceiveSP";
 
+import {styles} from "../styles";
+
 const ReceiveSP: React.FC = () => {
   const initOrder = { Rec_ID: "" };
   const initItem = { QR_NO: "", Tag_ID: "" };
@@ -257,7 +259,7 @@ const ReceiveSP: React.FC = () => {
                   size={20}
                   width={"100%"}
                   accessibilityLabel="Choose Service"
-                  placeholder="RECEIVE SP ORDER NO."
+                  placeholder="RECEIVE PART ORDER NO."
                   selectedValue={order?.Rec_ID || ""}
                   onValueChange={(value) => handleChangeOrder(value)}
                 >
@@ -318,32 +320,36 @@ const ReceiveSP: React.FC = () => {
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
-                        <Text bold>SP</Text>
+                      <DataTable.Title style={styles.table_title_54}>
+                        <Text bold>PART</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
+                      <DataTable.Title numeric style={styles.table_title_18}>
                         <Text bold>LOCK</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
+                      <DataTable.Title numeric style={styles.table_title_18}>
                         <Text bold>TOTAL</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
                         <DataTable.Row key={key}>
-                          <DataTable.Title style={{ maxWidth: "10%" }}>
+                          <DataTable.Title style={styles.table_title_10}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.SP}</DataTable.Cell>
-                          <DataTable.Cell numeric>
+                          <DataTable.Cell style={styles.table_title_54}>
+                            {value.SP}
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"red.600"}>
                               {value.Lock}
                             </Text>
                           </DataTable.Cell>
-                          <DataTable.Cell numeric>{value.Total}</DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
+                            {value.Total}
+                          </DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (

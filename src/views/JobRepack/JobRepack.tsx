@@ -34,6 +34,8 @@ import {
   useExecJobRepackItem,
 } from "../../hooks/useJobRepack";
 
+import { styles } from "../styles";
+
 const JobRepack: React.FC = () => {
   const initOrder = {};
   const initItem = { QR_NO: "", Tag_ID: "", Item_ID: "" };
@@ -212,7 +214,7 @@ const JobRepack: React.FC = () => {
 
     if (
       bomData.data.data.filter((value: any) => {
-        return value.Item_ID == item.Item_ID && value.Actual == value.BOM;
+        return parseInt(value.Item_ID) === parseInt(item.Item_ID) && parseInt(value.Actual) === parseInt(value.BOM);
       }).length > 0
     ) {
       setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
@@ -420,7 +422,7 @@ const JobRepack: React.FC = () => {
                   showSoftInputOnFocus={false}
                   variant="underlined"
                   p={2}
-                  placeholder="SCAN QR SP"
+                  placeholder="SCAN QR PART"
                   isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
@@ -454,32 +456,32 @@ const JobRepack: React.FC = () => {
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
-                        <Text bold>SP</Text>
+                      <DataTable.Title style={styles.table_title_54}>
+                        <Text bold>PART</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
-                        <Text bold>ACTUAL</Text>
+                      <DataTable.Title numeric style={styles.table_title_18}>
+                        <Text bold>ACT</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
+                      <DataTable.Title numeric style={styles.table_title_18}>
                         <Text bold>BOM</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {bomData?.data?.data?.map((value: any, key: number) => {
                       return (
                         <DataTable.Row key={key}>
-                          <DataTable.Title style={{ maxWidth: "10%" }}>
+                          <DataTable.Title style={styles.table_title_10}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.SP}</DataTable.Cell>
-                          <DataTable.Cell numeric>
+                          <DataTable.Cell style={styles.table_title_54}>{value.SP}</DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"red.600"}>
                               {value.Actual}
                             </Text>
                           </DataTable.Cell>
-                          <DataTable.Cell numeric>{value.BOM}</DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>{value.BOM}</DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (

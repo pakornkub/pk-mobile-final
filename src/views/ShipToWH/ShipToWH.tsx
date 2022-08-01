@@ -27,6 +27,8 @@ import AppAlert from "../../components/AppAlert";
 import { useCheckStock } from "../../hooks/useCheckStock";
 import { useUpdateShipToWH } from "../../hooks/useShipToWH";
 
+import { styles } from "../styles";
+
 const ShipToWH: React.FC = () => {
   const initItem = { QR_NO: "" };
   const initItems: any[] = [];
@@ -88,7 +90,7 @@ const ShipToWH: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    if (parseInt(items.length) <= 10 && parseInt(items.length) > 0) {
+    if (parseInt(items.length) <= 20 && parseInt(items.length) > 0) {
       setDisabledButton(false);
     }
   };
@@ -263,32 +265,32 @@ const ShipToWH: React.FC = () => {
               </FormControl>
               <ScrollView
                 keyboardShouldPersistTaps="handled"
-                style={{ height: "50%" }}
+                style={{ height: "45%" }}
               >
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
+                      <DataTable.Title style={styles.table_title_36}>
                         <Text bold>QR NO.</Text>
                       </DataTable.Title>
                       <DataTable.Title>
-                        <Text bold>ITEM DESCRIPTION</Text>
+                        <Text bold>ITEM CODE</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {items.length > 0 ? (
                       items.map((value: any, key: number) => {
                         return (
                           <DataTable.Row key={key}>
-                            <DataTable.Title style={{ maxWidth: "10%" }}>
+                            <DataTable.Title style={styles.table_title_10}>
                               {key + 1}
                             </DataTable.Title>
-                            <DataTable.Cell>{value.QR_NO}</DataTable.Cell>
-                            <DataTable.Cell>
-                              {value.ITEM_DESCRIPTION}
+                            <DataTable.Cell style={styles.table_title_36}>
+                              {value.QR_NO}
                             </DataTable.Cell>
+                            <DataTable.Cell>{value.ITEM_ID}</DataTable.Cell>
                           </DataTable.Row>
                         );
                       })
@@ -300,13 +302,20 @@ const ShipToWH: React.FC = () => {
                   </DataTable>
                 </TouchableOpacity>
               </ScrollView>
-              <HStack alignItems={"center"} justifyContent={"space-between"}>
-                <Text fontSize={25}>{`SHIP TO WH`}</Text>
-                <Text fontSize={25}>
-                  <Text bold color={"green.600"}>{`${items.length || 0}`}</Text>
-                  {` / 12 TOTAL`}
-                </Text>
-              </HStack>
+              <VStack>
+                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                  <Text fontSize={25}>{`SHIP TO WH`}</Text>
+                  <Text fontSize={25}>
+                    <Text bold color={"green.600"}>{`${
+                      items.length || 0
+                    }`}</Text>
+                  </Text>
+                </HStack>
+                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                  <Text fontSize={25}>{`MAX`}</Text>
+                  <Text fontSize={25}>{`20`}</Text>
+                </HStack>
+              </VStack>
               <Button
                 backgroundColor="green.600"
                 leftIcon={

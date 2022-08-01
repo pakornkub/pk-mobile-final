@@ -152,6 +152,7 @@ const CheckStock: React.FC = () => {
                 )}
               </FormControl>
               <ScrollView
+                style={{ height: "80%" }}
                 keyboardShouldPersistTaps="handled"
                 refreshControl={
                   <RefreshControl
@@ -236,6 +237,7 @@ const CheckStock: React.FC = () => {
                     {itemData?.data?.data?.Location_Des || ""}
                   </Text>
                 </Text>
+                <Divider style={styles.divder} />
               </ScrollView>
             </VStack>
           </Box>

@@ -33,6 +33,8 @@ import {
   useUpdateCountStock,
 } from "../../hooks/useCountStock";
 
+import { styles } from "../styles";
+
 const CountStock: React.FC = () => {
   const initOrder = { CountStock_ID: "" };
   const initItem = { QR_NO: "", Item_ID: "" };
@@ -339,32 +341,34 @@ const CountStock: React.FC = () => {
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
-                        <Text bold>SP/FG</Text>
+                      <DataTable.Title style={styles.table_title_54}>
+                        <Text bold>PART/FG</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
-                        <Text bold>Actual</Text>
+                      <DataTable.Title numeric style={styles.table_title_18}>
+                        <Text bold>ACT</Text>
                       </DataTable.Title>
-                      <DataTable.Title numeric>
-                        <Text bold>Balance</Text>
+                      <DataTable.Title numeric style={styles.table_title_18}>
+                        <Text bold>BAL</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {itemData?.data?.data?.map((value: any, key: number) => {
                       return (
                         <DataTable.Row key={key}>
-                          <DataTable.Title style={{ maxWidth: "10%" }}>
+                          <DataTable.Title style={styles.table_title_10}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell>{value.Item}</DataTable.Cell>
-                          <DataTable.Cell numeric>
+                          <DataTable.Cell style={styles.table_title_54}>
+                            {value.Item}
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"primary.600"}>
                               {value.Actual}
                             </Text>
                           </DataTable.Cell>
-                          <DataTable.Cell numeric>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
                             {value.Balance}
                           </DataTable.Cell>
                         </DataTable.Row>

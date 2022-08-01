@@ -27,6 +27,8 @@ import AppAlert from "../../components/AppAlert";
 import { useCheckStock } from "../../hooks/useCheckStock";
 import { useUpdateWithdraw } from "../../hooks/useWithdraw";
 
+import { styles } from "../styles";
+
 const Withdraw: React.FC = () => {
   const initItem = { QR_NO: "" };
   const initItems: any[] = [];
@@ -88,7 +90,7 @@ const Withdraw: React.FC = () => {
   };
 
   const calculateTotal = () => {
-    if (parseInt(items.length) <= 10 && parseInt(items.length) > 0) {
+    if (parseInt(items.length) <= 20 && parseInt(items.length) > 0) {
       setDisabledButton(false);
     }
   };
@@ -118,9 +120,9 @@ const Withdraw: React.FC = () => {
     }
 
     if (
-      !itemData.data.data.ItemStatus_ID ||
-      parseInt(itemData.data.data.ItemStatus_ID) !== 2 ||
-      parseInt(itemData.data.data.ItemStatus_ID) !== 5
+      !itemData.data.data.ItemStatus_ID || (
+      parseInt(itemData.data.data.ItemStatus_ID) !== 2 &&
+      parseInt(itemData.data.data.ItemStatus_ID) !== 5 )
     ) {
       setErrors({ ...errors, QR_NO: "Status product is not Good or Unlock" });
       clearState("Item");
@@ -260,29 +262,27 @@ const Withdraw: React.FC = () => {
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
-                      <DataTable.Title style={{ maxWidth: "10%" }}>
+                      <DataTable.Title style={styles.table_title_10}>
                         <Text bold>NO.</Text>
                       </DataTable.Title>
-                      <DataTable.Title>
-                        {" "}
+                      <DataTable.Title style={styles.table_title_36}>
                         <Text bold>QR NO.</Text>
                       </DataTable.Title>
                       <DataTable.Title>
-                        {" "}
-                        <Text bold>ITEM DESCRIPTION</Text>
+                        <Text bold>ITEM CODE</Text>
                       </DataTable.Title>
                     </DataTable.Header>
                     {items.length > 0 ? (
                       items.map((value: any, key: number) => {
                         return (
                           <DataTable.Row key={key}>
-                            <DataTable.Title style={{ maxWidth: "10%" }}>
+                            <DataTable.Title style={styles.table_title_10}>
                               {key + 1}
                             </DataTable.Title>
-                            <DataTable.Cell>{value.QR_NO}</DataTable.Cell>
-                            <DataTable.Cell>
-                              {value.ITEM_DESCRIPTION}
+                            <DataTable.Cell style={styles.table_title_36}>
+                              {value.QR_NO}
                             </DataTable.Cell>
+                            <DataTable.Cell>{value.ITEM_CODE}</DataTable.Cell>
                           </DataTable.Row>
                         );
                       })
@@ -294,13 +294,20 @@ const Withdraw: React.FC = () => {
                   </DataTable>
                 </TouchableOpacity>
               </ScrollView>
-              <HStack alignItems={"center"} justifyContent={"space-between"}>
-                <Text fontSize={25}>{`WITHDRAW`}</Text>
-                <Text fontSize={25}>
-                  <Text bold color={"red.600"}>{`${items.length || 0}`}</Text>
-                  {` / 12 TOTAL`}
-                </Text>
-              </HStack>
+              <VStack>
+                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                  <Text fontSize={25}>{`WITHDRAW`}</Text>
+                  <Text fontSize={25}>
+                    <Text bold color={"red.600"}>{`${items.length || 0}`}</Text>
+                  </Text>
+                </HStack>
+                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                  <Text fontSize={25}>{`MAX`}</Text>
+                  <Text fontSize={25}>
+                    {`20`}
+                  </Text>
+                </HStack>
+              </VStack>
               <Button
                 backgroundColor="green.600"
                 leftIcon={
