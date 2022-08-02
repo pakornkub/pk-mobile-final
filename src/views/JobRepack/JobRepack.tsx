@@ -141,12 +141,19 @@ const JobRepack: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    setItem({
-      ...item,
-      QR_NO: qr?.QR_NO || "",
-      Tag_ID: qr?.Tag_ID || "",
-      Item_ID: qr?.Item_ID || "",
-    });
+    if (qr?.Item_Code) {
+      setItem({
+        ...item,
+        Item_Code: qr?.Item_Code || "",
+      });
+    } else {
+      setItem({
+        ...item,
+        QR_NO: qr?.QR_NO || "",
+        Tag_ID: qr?.Tag_ID || "",
+        Item_ID: qr?.Item_ID || "",
+      });
+    }
 
     refScanner.current = true;
   };
@@ -214,7 +221,16 @@ const JobRepack: React.FC = () => {
 
     if (
       bomData.data.data.filter((value: any) => {
-        return parseInt(value.Item_ID) === parseInt(item.Item_ID) && parseInt(value.Actual) === parseInt(value.BOM);
+        if (item?.Item_Code)
+          return (
+            parseInt(value.Item_ID) === parseInt(item.Item_ID) &&
+            parseInt(value.Actual) === parseInt(value.BOM)
+          );
+        else
+          return (
+            parseInt(value.SP) === parseInt(item.Item_Code) &&
+            parseInt(value.Actual) === parseInt(value.BOM)
+          );
       }).length > 0
     ) {
       setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
@@ -223,10 +239,18 @@ const JobRepack: React.FC = () => {
     }
 
     if (QRType === "Item") {
-      if (!item.QR_NO || !item.Tag_ID) {
-        setErrors({ ...errors, QR_NO: "Invalid QR format" });
-        clearState("Item");
-        return false;
+      if (item?.Item_Code) {
+        if (!item.Item_Code) {
+          setErrors({ ...errors, QR_NO: "Invalid QR format Miscellaneous" });
+          clearState("Item");
+          return false;
+        }
+      } else {
+        if (!item.QR_NO || !item.Tag_ID) {
+          setErrors({ ...errors, QR_NO: "Invalid QR format" });
+          clearState("Item");
+          return false;
+        }
       }
     } else if (QRType === "Box") {
       if (!box.QR_NO_BOX) {
@@ -434,7 +458,7 @@ const JobRepack: React.FC = () => {
                     />
                   }
                   autoFocus
-                  value={item?.QR_NO || ""}
+                  value={item?.QR_NO || item?.Item_Code || ""}
                   onChangeText={(value) => handleScanner(value)}
                 />
                 {"QR_NO" in errors && (
@@ -475,13 +499,17 @@ const JobRepack: React.FC = () => {
                           <DataTable.Title style={styles.table_title_10}>
                             {value.No}
                           </DataTable.Title>
-                          <DataTable.Cell style={styles.table_title_54}>{value.SP}</DataTable.Cell>
+                          <DataTable.Cell style={styles.table_title_54}>
+                            {value.SP}
+                          </DataTable.Cell>
                           <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"red.600"}>
                               {value.Actual}
                             </Text>
                           </DataTable.Cell>
-                          <DataTable.Cell numeric style={styles.table_title_18}>{value.BOM}</DataTable.Cell>
+                          <DataTable.Cell numeric style={styles.table_title_18}>
+                            {value.BOM}
+                          </DataTable.Cell>
                         </DataTable.Row>
                       );
                     }) || (
