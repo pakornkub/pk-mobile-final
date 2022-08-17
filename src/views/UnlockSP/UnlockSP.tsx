@@ -58,6 +58,7 @@ const UnlockSP: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useUnlockSP();
@@ -313,7 +314,7 @@ const UnlockSP: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={itemIsLoading}
-                    onRefresh={() => itemRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >

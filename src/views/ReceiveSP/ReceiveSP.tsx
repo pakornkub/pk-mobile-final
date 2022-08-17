@@ -57,6 +57,7 @@ const ReceiveSP: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useReceiveSP();
@@ -313,7 +314,7 @@ const ReceiveSP: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={itemIsLoading}
-                    onRefresh={() => itemRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >

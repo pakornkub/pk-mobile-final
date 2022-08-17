@@ -57,6 +57,7 @@ const ReceiveReturn: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useReceiveReturn();
@@ -322,7 +323,7 @@ const ReceiveReturn: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={itemIsLoading}
-                    onRefresh={() => itemRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >

@@ -120,9 +120,9 @@ const Withdraw: React.FC = () => {
     }
 
     if (
-      !itemData.data.data.ItemStatus_ID || (
-      parseInt(itemData.data.data.ItemStatus_ID) !== 2 &&
-      parseInt(itemData.data.data.ItemStatus_ID) !== 5 )
+      !itemData.data.data.ItemStatus_ID ||
+      (parseInt(itemData.data.data.ItemStatus_ID) !== 2 &&
+        parseInt(itemData.data.data.ItemStatus_ID) !== 5)
     ) {
       setErrors({ ...errors, QR_NO: "Status product is not Good or Unlock" });
       clearState("Item");
@@ -139,7 +139,7 @@ const Withdraw: React.FC = () => {
       return false;
     }
 
-    if (parseInt(items.length) === 12) {
+    if (parseInt(items.length) === 20) {
       setErrors({ ...errors, QR_NO: "Total completed can not scan" });
       clearState("Item");
       return false;
@@ -257,7 +257,7 @@ const Withdraw: React.FC = () => {
               </FormControl>
               <ScrollView
                 keyboardShouldPersistTaps="handled"
-                style={{ height: "50%" }}
+                style={{ height: "45%" }}
               >
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
@@ -303,9 +303,7 @@ const Withdraw: React.FC = () => {
                 </HStack>
                 <HStack alignItems={"center"} justifyContent={"space-between"}>
                   <Text fontSize={25}>{`MAX`}</Text>
-                  <Text fontSize={25}>
-                    {`20`}
-                  </Text>
+                  <Text fontSize={25}>{`20`}</Text>
                 </HStack>
               </VStack>
               <Button

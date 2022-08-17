@@ -25,6 +25,7 @@ import { getDataFromQR } from "../../utils/qr";
 import AppLoadingScreen from "../../components/AppLoadingScreen";
 import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
+import AppAlertDialog from "../../components/AppAlertDialog";
 
 import {
   useJobRepack,
@@ -55,6 +56,8 @@ const JobRepack: React.FC = () => {
   const [disabledButton, setDisabledButton] = useState<boolean>(true);
   const [disabledItem, setDisabledItem] = useState<boolean>(false);
   const [disabledBox, setDisabledBox] = useState<boolean>(true);
+
+  const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
 
   const refInput = useRef<any>(null);
   const refInputBox = useRef<any>(null);
@@ -174,6 +177,18 @@ const JobRepack: React.FC = () => {
     refScannerBox.current = true;
   };
 
+  const handleAlertDialog = () => {
+    if (
+      parseInt(order?.JOB_QTY || 0) !== parseInt(order?.BOX_QTY || 0) &&
+      parseInt(order?.JOB_QTY || 0) > 0 &&
+      parseInt(order?.BOX_QTY || 0) !== 0
+    ) {
+      setIsOpenAlertDialog(true);
+    } else {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = () => {
     updateMutate(order);
   };
@@ -206,6 +221,11 @@ const JobRepack: React.FC = () => {
       setDisabledItem(true);
       setDisabledBox(true);
       setDisabledButton(false);
+    } else if (
+      parseInt(order?.JOB_QTY || 0) > 0 &&
+      parseInt(order?.BOX_QTY || 0) !== 0
+    ) {
+      setDisabledButton(false);
     }
   };
 
@@ -223,12 +243,12 @@ const JobRepack: React.FC = () => {
       bomData.data.data.filter((value: any) => {
         if (item?.Item_Code)
           return (
-            parseInt(value.Item_ID) === parseInt(item.Item_ID) &&
+            parseInt(value.SP) === parseInt(item.Item_Code) &&
             parseInt(value.Actual) === parseInt(value.BOM)
           );
         else
           return (
-            parseInt(value.SP) === parseInt(item.Item_Code) &&
+            parseInt(value.Item_ID) === parseInt(item.Item_ID) &&
             parseInt(value.Actual) === parseInt(value.BOM)
           );
       }).length > 0
@@ -567,11 +587,12 @@ const JobRepack: React.FC = () => {
                   <Icon as={<MaterialIcons name="check" />} size="sm" />
                 }
                 isDisabled={disabledButton}
-                onPress={handleSubmit}
+                onPress={handleAlertDialog}
               >
                 SAVE
               </Button>
             </VStack>
+            <AppAlertDialog isOpenAlertDialog={isOpenAlertDialog} setIsOpenAlertDialog={setIsOpenAlertDialog} handleSubmit={handleSubmit} />
           </Box>
         </TouchableWithoutFeedback>
       ) : !camera2 ? (

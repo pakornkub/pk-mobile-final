@@ -58,6 +58,7 @@ const CountStock: React.FC = () => {
     isFetching,
     isError,
     data: orderData,
+    refetch: orderRefetch,
     status,
     error,
   } = useCountStock();
@@ -265,6 +266,10 @@ const CountStock: React.FC = () => {
 
   useEffect(() => {
     refInput?.current?.focus();
+
+    return () => {
+      clearState("All");
+    };
   });
 
   return (
@@ -334,7 +339,7 @@ const CountStock: React.FC = () => {
                 refreshControl={
                   <RefreshControl
                     refreshing={itemIsLoading}
-                    onRefresh={() => itemRefetch()}
+                    onRefresh={() => orderRefetch()}
                   />
                 }
               >

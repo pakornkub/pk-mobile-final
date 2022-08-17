@@ -80,7 +80,10 @@ const CheckStock: React.FC = () => {
   }, [item, errors]);
 
   const clearState = useCallback((type: string) => {
-    if (type === "Item") {
+    if (type === "All") {
+      setItem(initItem);
+      setErrors(initErrors);
+    } else if (type === "Item") {
       setItem(initItem);
     } else {
       setErrors(initErrors);
@@ -115,6 +118,10 @@ const CheckStock: React.FC = () => {
 
   useEffect(() => {
     refInput?.current?.focus();
+
+    return () => {
+      clearState("All");
+    };
   });
 
   return (
@@ -167,77 +174,77 @@ const CheckStock: React.FC = () => {
                     {itemData?.data?.data?.QR_NO || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>RECEIVE :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Rec_NO || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>RECEIVE DATE :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Rec_Datetime || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>JOB :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.JOB_No || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>ITEM :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.ITEM_CODE || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>LOT :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.LOT || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>DESCRIPTION :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.ITEM_DESCRIPTION || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>CREATE BY :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Create_By || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>CREATE DATE :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Create_Date || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>STATUS :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.ItemStatus_Des || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>LOCATION :{`   `}</Text>
                   <Text style={styles.textContent}>
                     {itemData?.data?.data?.Location_Des || ""}
                   </Text>
                 </Text>
-                <Divider style={styles.divder} />
+                <Divider style={styles.divider} />
               </ScrollView>
             </VStack>
           </Box>
@@ -250,7 +257,7 @@ const CheckStock: React.FC = () => {
 };
 
 const styles: any = {
-  divder: {
+  divider: {
     marginTop: 10,
     marginBottom: 10,
   },

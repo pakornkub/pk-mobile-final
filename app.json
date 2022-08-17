@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "pk-mobile",
-    "slug": "pk-mobile",
+    "name": "REPACK",
+    "slug": "toto-repack",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/toto-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/toto-splash.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/toto-adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.kingkodomo.pkmobile"

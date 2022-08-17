@@ -147,7 +147,7 @@ const ShipToWH: React.FC = () => {
       return false;
     }
 
-    if (parseInt(items.length) === 12) {
+    if (parseInt(items.length) === 20) {
       setErrors({ ...errors, QR_NO: "Total completed can not scan" });
       clearState("Item");
       return false;
