@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useQueryClient } from "react-query";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -43,6 +44,7 @@ const JobRecheck: React.FC = () => {
   const initErrors = {};
 
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [camera, setCamera] = useState<boolean>(false);
   const [camera2, setCamera2] = useState<boolean>(false);
@@ -379,6 +381,13 @@ const JobRecheck: React.FC = () => {
     refInput?.current?.focus();
     refInputBox?.current?.focus();
   });
+
+  useEffect(() => {
+    return () => {
+      clearState("All");
+      queryClient.clear();
+    };
+  }, []);
 
   return (
     <>

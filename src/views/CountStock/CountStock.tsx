@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useQueryClient } from "react-query";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -41,6 +42,8 @@ const CountStock: React.FC = () => {
   const initErrors = {};
 
   const toast = useToast();
+
+  const queryClient = useQueryClient();
 
   const [camera, setCamera] = useState<boolean>(false);
 
@@ -266,11 +269,14 @@ const CountStock: React.FC = () => {
 
   useEffect(() => {
     refInput?.current?.focus();
+  });
 
+  useEffect(() => {
     return () => {
       clearState("All");
+      queryClient.clear();
     };
-  });
+  }, []);
 
   return (
     <>

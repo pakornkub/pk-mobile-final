@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useQueryClient } from "react-query";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -26,13 +27,16 @@ import AppAlert from "../../components/AppAlert";
 
 const CheckStock: React.FC = () => {
   const initItem = { QR_NO: "" };
+  const initItemDetail = {};
   const initErrors = {};
 
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [camera, setCamera] = useState<boolean>(false);
 
   const [item, setItem] = useState<any>(initItem);
+  const [itemDetail, setItemDetail] = useState<any>(initItemDetail);
   const [errors, setErrors] = useState<any>(initErrors);
 
   const refInput = useRef<any>(null);
@@ -76,25 +80,41 @@ const CheckStock: React.FC = () => {
       return false;
     }
 
+    if (!itemData.data.status) {
+      setErrors({ ...errors, QR_NO: `${itemData.data.message}` });
+      clearState("Item");
+      return false;
+    }
+
     return true;
-  }, [item, errors]);
+  }, [item, itemData, errors]);
 
   const clearState = useCallback((type: string) => {
     if (type === "All") {
       setItem(initItem);
+      setItemDetail(initItemDetail);
       setErrors(initErrors);
     } else if (type === "Item") {
       setItem(initItem);
+      setItemDetail(initItemDetail);
     } else {
       setErrors(initErrors);
     }
   }, []);
 
   useEffect(() => {
-    if (refScanner.current && validateErrors()) {
-      itemRefetch();
-    }
+    itemRefetch();
   }, [item]);
+
+  useEffect(() => {
+    if (!itemData) {
+      return;
+    }
+
+    if (refScanner.current && validateErrors()) {
+      setItemDetail(itemData.data.data);
+    }
+  }, [itemData]);
 
   useEffect(() => {
     if (itemStatus === "error") {
@@ -109,20 +129,20 @@ const CheckStock: React.FC = () => {
         duration: 3000,
       });
       clearState("Item");
-    }
-
-    return () => {
       refScanner.current = false;
-    };
+    }
   }, [itemStatus]);
 
   useEffect(() => {
     refInput?.current?.focus();
+  });
 
+  useEffect(() => {
     return () => {
       clearState("All");
+      queryClient.clear();
     };
-  });
+  }, []);
 
   return (
     <>
@@ -171,77 +191,77 @@ const CheckStock: React.FC = () => {
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>QR :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.QR_NO || ""}
+                    {itemDetail?.QR_NO || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>RECEIVE :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Rec_NO || ""}
+                    {itemDetail?.Rec_NO || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>RECEIVE DATE :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Rec_Datetime || ""}
+                    {itemDetail?.Rec_Datetime || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>JOB :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.JOB_No || ""}
+                    {itemDetail?.JOB_No || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>ITEM :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.ITEM_CODE || ""}
+                    {itemDetail?.ITEM_CODE || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>LOT :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.LOT || ""}
+                    {itemDetail?.LOT || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>DESCRIPTION :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.ITEM_DESCRIPTION || ""}
+                    {itemDetail?.ITEM_DESCRIPTION || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>CREATE BY :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Create_By || ""}
+                    {itemDetail?.Create_By || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>CREATE DATE :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Create_Date || ""}
+                    {itemDetail?.Create_Date || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>STATUS :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.ItemStatus_Des || ""}
+                    {itemDetail?.ItemStatus_Des || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
                 <Text fontSize="md">
                   <Text style={styles.textHeader}>LOCATION :{`   `}</Text>
                   <Text style={styles.textContent}>
-                    {itemData?.data?.data?.Location_Des || ""}
+                    {itemDetail?.Location_Des || ""}
                   </Text>
                 </Text>
                 <Divider style={styles.divider} />
