@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Dimensions, SafeAreaView } from "react-native";
-import { FlatList, Box, Pressable, Icon, Center } from "native-base";
-import { MaterialIcons, Foundation } from "@expo/vector-icons";
+import { FlatList, Box, Pressable } from "native-base";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -13,23 +12,22 @@ const GridList: React.FC<any> = ({ navigation, col, items }) => {
         numColumns={col}
         data={items}
         keyExtractor={(item: any) => item.Menu_Index}
-        bg={"blue.700"}
         renderItem={({ item }: any) => {
           return (
             <Pressable onPress={() => navigation.navigate(item.MenuId)}>
               {({ isHovered, isPressed }) => {
                 return (
                   <Box
-                    pt={5}
-                    pb={5}
+                    pt={10}
+                    pb={10}
                     m={2}
-                    w={(windowWidth / col) * 0.88}
+                    w={(windowWidth / col) * 0.9}
                     bg={
                       isPressed
-                        ? "blue.900"
+                        ? "primary.700"
                         : isHovered
-                        ? "blue.900"
-                        : "blue.700"
+                        ? "primary.700"
+                        : "primary.500"
                     }
                     rounded="md"
                     style={{
@@ -44,22 +42,9 @@ const GridList: React.FC<any> = ({ navigation, col, items }) => {
                       fontWeight: "bold",
                       color: "warmGray.50",
                       textAlign: "center",
+                      textTransform: "uppercase",
                     }}
                   >
-                    <Center m={2}>
-                      <Icon
-                        ml={item.Icon == "clipboard-pencil" ? 5 : 0}
-                        color={"warmGray.50"}
-                        as={
-                          item.Icon == "clipboard-pencil" ? (
-                            <Foundation name={item.Icon} />
-                          ) : (
-                            <MaterialIcons name={item.Icon} />
-                          )
-                        }
-                        size="5xl"
-                      />
-                    </Center>
                     {item.MenuName}
                   </Box>
                 );

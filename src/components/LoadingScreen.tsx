@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { VStack, Heading, Spinner } from "native-base";
 
-const AppLoadingScreen: React.FC<any> = ({ show }) => {
+const LoadingScreen: React.FC<any> = ({ show }) => {
   return (
     <>
       {show && (
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
-export default AppLoadingScreen;
+export default LoadingScreen;

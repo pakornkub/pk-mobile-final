@@ -1,9 +1,11 @@
 import React, { useEffect, useCallback } from "react";
+import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, HStack, Pressable } from "native-base";
+import { Avatar, HStack, Pressable, Text } from "native-base";
 import { Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 import { setAuth, selectAuth } from "../../contexts/slices/authSlice";
 
@@ -13,6 +15,7 @@ import { getTimeFromToken } from "../../utils/token";
 import { expireTime } from "../../configs/token";
 
 import { DynamicMenu } from "../../components/DynamicMenu";
+import Logo from "../../components/Logo";
 
 const Login = React.lazy(() => import("../Login"));
 const Menu = React.lazy(() => import("../Menu"));
@@ -22,6 +25,8 @@ const Main: React.FC = () => {
   const Stack: any = createStackNavigator();
   const dispatch = useDispatch();
   const { authResult } = useSelector(selectAuth);
+
+  const NetInfo = useNetInfo();
 
   const validateToken = useCallback(async () => {
     try {
@@ -59,7 +64,7 @@ const Main: React.FC = () => {
   const handleLogout = useCallback(() => {
     Alert.alert(
       "CONFIRM LOGOUT",
-      authResult?.data.UserName + " : Confirm logout or not ?",
+      authResult?.data.UserName,
       [
         {
           text: "CANCEL",
@@ -89,22 +94,23 @@ const Main: React.FC = () => {
               name="Menu"
               component={Menu}
               options={() => ({
-                title: "MAIN",
+                headerTitle: () => <Logo />,
                 headerRight: () => (
                   <HStack space={2} pr="2">
                     <Pressable onPress={() => handleLogout()}>
                       {({ isHovered, isPressed }) => {
                         return (
                           <Avatar
-                            bg="primary.500"
+                            bg="blue.700"
                             size="sm"
                             mt={1}
+                            w={Platform.OS === "ios" ? 10  : 100}
                             color={
                               isPressed
-                                ? "primary.700"
+                                ? "blue.900"
                                 : isHovered
-                                ? "primary.700"
-                                : "primary.500"
+                                ? "blue.900"
+                                : "blue.700"
                             }
                             style={{
                               transform: [
@@ -114,8 +120,16 @@ const Main: React.FC = () => {
                               ],
                             }}
                           >
-                            {authResult.data.UserName.charAt(0).toUpperCase()}
-                            <Avatar.Badge bg="green.500" />
+                            {Platform.OS === "ios" ? (
+                              authResult.data.UserName.charAt(0).toUpperCase()
+                            ) : (
+                              <Text mb={1} bold isTruncated color="warmGray.50">
+                                {authResult.data.UserName}
+                              </Text>
+                            )}
+                            <Avatar.Badge
+                              bg={NetInfo.isConnected ? "green.500" : "red.500"}
+                            />
                           </Avatar>
                         );
                       }}
@@ -133,14 +147,18 @@ const Main: React.FC = () => {
                   options={() => ({
                     title: `${value.MenuName.toUpperCase()}`,
                     headerStyle: {
-                      backgroundColor: "#2471A3",
+                      backgroundColor: /* "#2471A3" */"#1C4ED8",
                     },
                     headerTitleStyle: {
-                      color: "#FDFEFE",
+                      color: "#FFFEFE",
                     },
-                    headerTintColor: "#FDFEFE",
+                    headerTintColor: "#FFFEFE",
                   })}
-                  component={DynamicMenu[value.MenuId] ? DynamicMenu[value.MenuId] : Error404}
+                  component={
+                    DynamicMenu[value.MenuId]
+                      ? DynamicMenu[value.MenuId]
+                      : Error404
+                  }
                 />
               );
             })}

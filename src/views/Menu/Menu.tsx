@@ -14,7 +14,7 @@ const Menu: React.FC<any> = ({navigation}) => {
 
   return (
     <Container h="100%">
-      { authResult?.data?.permission ?  <ListMenu items={authResult?.data?.permission} col={2} navigation={navigation} /> : <Error404/> }
+      { authResult?.data?.permission ?  <ListMenu items={authResult?.data?.permission} col={3} navigation={navigation} /> : <Error404/> }
     </Container>
   );
 };

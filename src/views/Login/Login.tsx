@@ -17,7 +17,7 @@ import { useAuthLogin } from "../../hooks/useLogin";
 import { IAuthLoginParams } from "../../types/views/Login";
 
 import AppAlert from "../../components/AppAlert";
-import AppLoadingScreen from "../../components/AppLoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
 import Logo from "../../assets/toto.svg";
 
 const Login: React.FC = () => {
@@ -55,7 +55,7 @@ const Login: React.FC = () => {
 
   return (
     <Box flex={1} safeArea>
-      <AppLoadingScreen show={isLoading} />
+      <LoadingScreen show={isLoading} />
       <Center mt="10%">
         <Logo width={250} height={120} />
       </Center>

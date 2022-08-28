@@ -18,15 +18,17 @@ import {
   FormControl,
   Text,
   HStack,
+  AlertDialog,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 
 import { getDataFromQR } from "../../utils/qr";
-import AppLoadingScreen from "../../components/AppLoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
 import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 import AppAlertDialog from "../../components/AppAlertDialog";
+import AlertDialogSemi from "../../components/AlertDialogSemi";
 
 import {
   useJobRepack,
@@ -40,7 +42,7 @@ import { styles } from "../styles";
 
 const JobRepack: React.FC = () => {
   const initOrder = {};
-  const initItem = { QR_NO: "", Tag_ID: "", Item_ID: "" };
+  const initItem = { QR_NO: "", Tag_ID: "", Item_ID: "", Series: "" };
   const initBox = { QR_NO_BOX: "" };
   const initErrors = {};
 
@@ -60,6 +62,7 @@ const JobRepack: React.FC = () => {
   const [disabledBox, setDisabledBox] = useState<boolean>(true);
 
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
+  const [isOpenAlertDialogSemi, setIsOpenAlertDialogSemi] = useState(false);
 
   const refInput = useRef<any>(null);
   const refInputBox = useRef<any>(null);
@@ -122,9 +125,10 @@ const JobRepack: React.FC = () => {
 
     let jobOrder = [...orderData?.data?.data];
 
-    let BOX_QTY = jobOrder.filter((value: any) => {
-      return value.JOB_ID === parseInt(job[0]);
-    })[0].BOX_QTY;
+    let BOX_QTY =
+      jobOrder.filter((value: any) => {
+        return value.JOB_ID === parseInt(job[0]);
+      })[0]?.BOX_QTY || 0;
 
     setOrder({
       ...order,
@@ -146,10 +150,10 @@ const JobRepack: React.FC = () => {
 
     const qr = getDataFromQR(value);
 
-    if (qr?.Item_Code) {
+    if (qr?.ITEM_CODE) {
       setItem({
         ...item,
-        Item_Code: qr?.Item_Code || "",
+        Item_Code: qr?.ITEM_CODE || "",
       });
     } else {
       setItem({
@@ -157,6 +161,7 @@ const JobRepack: React.FC = () => {
         QR_NO: qr?.QR_NO || "",
         Tag_ID: qr?.Tag_ID || "",
         Item_ID: qr?.Item_ID || "",
+        Series: qr?.Series || "",
       });
     }
 
@@ -193,6 +198,10 @@ const JobRepack: React.FC = () => {
 
   const handleSubmit = () => {
     updateMutate(order);
+  };
+
+  const handleScannerSubmit = () => {
+    itemMutate({ ...order, ...item });
   };
 
   const calculateItem = () => {
@@ -245,7 +254,7 @@ const JobRepack: React.FC = () => {
       bomData.data.data.filter((value: any) => {
         if (item?.Item_Code)
           return (
-            parseInt(value.SP) === parseInt(item.Item_Code) &&
+            value.SP === item.Item_Code &&
             parseInt(value.Actual) === parseInt(value.BOM)
           );
         else
@@ -309,7 +318,11 @@ const JobRepack: React.FC = () => {
 
   useEffect(() => {
     if (refScanner.current && validateErrors("Item")) {
-      itemMutate({ ...order, ...item });
+      if (item.Series) {
+        setIsOpenAlertDialogSemi(true);
+      } else {
+        handleScannerSubmit();
+      }
     }
   }, [item]);
 
@@ -439,7 +452,7 @@ const JobRepack: React.FC = () => {
       {!camera && !camera2 ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <AppLoadingScreen show={updateIsLoading || transIsLoading} />
+            <LoadingScreen show={updateIsLoading || transIsLoading} />
             <VStack space={5} p={5}>
               <FormControl isRequired isInvalid={"JOB_ID" in errors}>
                 <Select
@@ -487,7 +500,7 @@ const JobRepack: React.FC = () => {
                     />
                   }
                   autoFocus
-                  value={item?.QR_NO || item?.Item_Code || ""}
+                  value={/* item?.QR_NO || item?.Item_Code ||  */""}
                   onChangeText={(value) => handleScanner(value)}
                 />
                 {"QR_NO" in errors && (
@@ -529,7 +542,17 @@ const JobRepack: React.FC = () => {
                             {value.No}
                           </DataTable.Title>
                           <DataTable.Cell style={styles.table_title_54}>
-                            {value.SP}
+                            <Text
+                              color={
+                                value.Product_ID === 3
+                                  ? "indigo.500"
+                                  : value.Product_ID === 4
+                                  ? "blue.500"
+                                  : "black"
+                              }
+                            >
+                              {value.SP}
+                            </Text>
                           </DataTable.Cell>
                           <DataTable.Cell numeric style={styles.table_title_18}>
                             <Text bold color={"red.600"}>
@@ -601,7 +624,17 @@ const JobRepack: React.FC = () => {
                 SAVE
               </Button>
             </VStack>
-            <AppAlertDialog isOpenAlertDialog={isOpenAlertDialog} setIsOpenAlertDialog={setIsOpenAlertDialog} handleSubmit={handleSubmit} />
+            <AppAlertDialog
+              isOpenAlertDialog={isOpenAlertDialog}
+              setIsOpenAlertDialog={setIsOpenAlertDialog}
+              handleSubmit={handleSubmit}
+            />
+            <AlertDialogSemi
+              itemSemi={item}
+              isOpenAlertDialogSemi={isOpenAlertDialogSemi}
+              setIsOpenAlertDialogSemi={setIsOpenAlertDialogSemi}
+              handleScannerSubmit={handleScannerSubmit}
+            />
           </Box>
         </TouchableWithoutFeedback>
       ) : !camera2 ? (

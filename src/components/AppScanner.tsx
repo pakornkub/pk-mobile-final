@@ -42,6 +42,7 @@ const AppScanner: React.FC<any> = ({ handleScanner }) => {
           return (
             <Icon
               mt={1}
+              mb={5}
               as={<MaterialIcons name="cancel" />}
               size="6xl"
               color={

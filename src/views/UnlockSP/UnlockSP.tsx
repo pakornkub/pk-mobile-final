@@ -22,7 +22,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 
 import { getDataFromQR } from "../../utils/qr";
-import AppLoadingScreen from "../../components/AppLoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
 import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 
@@ -262,7 +262,7 @@ const UnlockSP: React.FC = () => {
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <AppLoadingScreen show={updateIsLoading || tagIsLoading} />
+            <LoadingScreen show={updateIsLoading || tagIsLoading} />
             <VStack space={10} p={5}>
               <FormControl isRequired isInvalid={"Rec_ID" in errors}>
                 <Select

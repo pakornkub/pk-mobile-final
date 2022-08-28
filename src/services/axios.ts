@@ -10,6 +10,7 @@ axios.interceptors.request.use(async (config) => {
     const token = await AsyncStorage.getItem("accessToken");
 
     //config.url = `${'http://172.30.22.161/pk-rest-server'}${config.url}`;
+    config.timeout = 1000 * 10
     config.url = `${REACT_APP_API_URL}${config.url}`;
     //config.headers = { 'Content-Type': 'multipart/form-data' }
     
@@ -22,6 +23,7 @@ axios.interceptors.request.use(async (config) => {
 }, (error) => {
 
     // Do something with request error
+    console.log('test => ',error)
 
     return Promise.reject(error);
 });
@@ -35,7 +37,7 @@ axios.interceptors.response.use((response) => {
     return response;
 
 }, function (error) {
-
+    console.log('test2 => ',error)
     if (error.response && error.response.status === 401) {
 
         return

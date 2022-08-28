@@ -21,7 +21,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 
 import { getDataFromQR } from "../../utils/qr";
-import AppLoadingScreen from "../../components/AppLoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
 import AppScanner from "../../components/AppScanner";
 import AppAlert from "../../components/AppAlert";
 
@@ -235,7 +235,7 @@ const Withdraw: React.FC = () => {
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <AppLoadingScreen show={itemIsLoading} />
+            <LoadingScreen show={itemIsLoading} />
             <VStack space={10} p={5}>
               <FormControl isRequired isInvalid={"QR_NO" in errors}>
                 <Input
