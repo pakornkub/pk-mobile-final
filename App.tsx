@@ -11,7 +11,7 @@ const App: React.FC = () => {
 
   return (
     <AppContainer>
-      <AppConnection isOpenTop={NetInfo.isConnected ? true : true} />
+      <AppConnection isOpenTop={NetInfo.isConnected ? false : true} />
       <Main/>
     </AppContainer>
   );
