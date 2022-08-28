@@ -3,7 +3,7 @@ import { Text, Slide, Box, Alert } from "native-base";
 
 const AppConnection: React.FC<any> = ({isOpenTop}) => {
   return (
-    <Box h="32" w="300">
+    <Box h="32" w="300" position={"absolute"}>
       <Slide in={isOpenTop} placement="top">
         <Alert justifyContent="center" status="error">
           <Alert.Icon />

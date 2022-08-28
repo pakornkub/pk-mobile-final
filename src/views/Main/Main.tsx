@@ -62,23 +62,19 @@ const Main: React.FC = () => {
   }, [authResult]);
 
   const handleLogout = useCallback(() => {
-    Alert.alert(
-      "CONFIRM LOGOUT",
-      authResult?.data.UserName,
-      [
-        {
-          text: "CANCEL",
-          style: "cancel",
+    Alert.alert("CONFIRM LOGOUT", authResult?.data.UserName, [
+      {
+        text: "CANCEL",
+        style: "cancel",
+      },
+      {
+        text: "CONFIRM",
+        style: "default",
+        onPress: () => {
+          dispatch(setAuth({}));
         },
-        {
-          text: "CONFIRM",
-          style: "default",
-          onPress: () => {
-            dispatch(setAuth({}));
-          },
-        },
-      ]
-    );
+      },
+    ]);
   }, [authResult]);
 
   useEffect(() => {
@@ -104,7 +100,7 @@ const Main: React.FC = () => {
                             bg="blue.700"
                             size="sm"
                             mt={1}
-                            w={Platform.OS === "ios" ? 10  : 100}
+                            w={Platform.OS === "ios" ? 10 : 100}
                             color={
                               isPressed
                                 ? "blue.900"
@@ -147,7 +143,7 @@ const Main: React.FC = () => {
                   options={() => ({
                     title: `${value.MenuName.toUpperCase()}`,
                     headerStyle: {
-                      backgroundColor: /* "#2471A3" */"#1C4ED8",
+                      backgroundColor: /* "#2471A3" */ "#1C4ED8",
                     },
                     headerTitleStyle: {
                       color: "#FFFEFE",

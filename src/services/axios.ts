@@ -23,7 +23,6 @@ axios.interceptors.request.use(async (config) => {
 }, (error) => {
 
     // Do something with request error
-    console.log('test => ',error)
 
     return Promise.reject(error);
 });
@@ -37,7 +36,7 @@ axios.interceptors.response.use((response) => {
     return response;
 
 }, function (error) {
-    console.log('test2 => ',error)
+
     if (error.response && error.response.status === 401) {
 
         return
