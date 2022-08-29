@@ -8,6 +8,7 @@ import {
   HStack,
   FormControl,
   Icon,
+  VStack,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import AppScanner from "../components/AppScanner";
@@ -123,7 +124,15 @@ const AlertDialogSemi: React.FC<any> = ({
               <AlertDialog.CloseButton />
               <AlertDialog.Header>CONFIRM SCAN SEMI</AlertDialog.Header>
               <AlertDialog.Body>
-                <Text>Scan QR code semi (BOX/WARE) for confirm issue.</Text>
+                <VStack space={4}>
+                  <Text>Scan QR code semi (BOX/WARE) for confirm issue.</Text>
+                  <Text bold>
+                    QR NO : <Text color={"blue.500"}>{itemSemi.QR_NO}</Text>
+                  </Text>
+                  <Text bold>
+                    Series : <Text color={"amber.500"}>{itemSemi.Series}</Text>
+                  </Text>
+                </VStack>
                 <HStack
                   flex={1}
                   alignItems="center"
@@ -139,7 +148,9 @@ const AlertDialogSemi: React.FC<any> = ({
                       showSoftInputOnFocus={false}
                       variant="filled"
                       p={2}
-                      placeholder="SCAN QR SEMI"
+                      placeholder={`SCAN QR SEMI (${
+                        itemSemi.Series === "BOX" ? "WARE" : "BOX"
+                      })`}
                       InputRightElement={
                         <Icon
                           size={35}
@@ -150,7 +161,7 @@ const AlertDialogSemi: React.FC<any> = ({
                         />
                       }
                       autoFocus
-                      value={item?.QR_NO || item?.Item_Code || ""}
+                      value={/* item?.QR_NO || item?.Item_Code || */ ""}
                       onChangeText={(value) => handleScanner(value)}
                     />
                     {"QR_NO" in errors && (

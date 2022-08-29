@@ -147,6 +147,7 @@ const Main: React.FC = () => {
                     },
                     headerTitleStyle: {
                       color: "#FFFEFE",
+                      fontWeight : "bold"
                     },
                     headerTintColor: "#FFFEFE",
                   })}
