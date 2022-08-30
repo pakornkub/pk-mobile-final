@@ -235,7 +235,7 @@ const Withdraw: React.FC = () => {
       {!camera ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <LoadingScreen show={itemIsLoading} />
+            <LoadingScreen show={itemIsLoading || updateIsLoading} />
             <VStack space={10} p={5}>
               <FormControl isRequired isInvalid={"QR_NO" in errors}>
                 <Input

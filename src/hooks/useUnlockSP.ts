@@ -55,7 +55,7 @@ export const useExecUnlockSPTag = () => {
 
   const execUnlockSPTag = async (params: any): Promise<any> => {
     let data = new FormData();
-console.log(params)
+
     Object.keys(params).forEach((value) => {
       data.append(value, params[value] || "");
     });

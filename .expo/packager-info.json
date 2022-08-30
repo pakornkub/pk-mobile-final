@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "packagerPort": 19000,
   "expoServerNgrokUrl": "https://fv-jhh.kingkodomo.pk-mobile.exp.direct",
   "packagerNgrokUrl": "https://fv-jhh.kingkodomo.pk-mobile.exp.direct",
-  "ngrokPid": 1908,
+  "ngrokPid": 1812,
   "packagerPid": null,
   "webpackServerPort": null
 }

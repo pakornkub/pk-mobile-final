@@ -394,7 +394,7 @@ const JobRecheck: React.FC = () => {
       {!camera && !camera2 ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <LoadingScreen show={updateIsLoading || transIsLoading} />
+            <LoadingScreen show={itemIsLoading || updateIsLoading || transIsLoading} />
             <VStack space={5} p={5}>
               <FormControl isRequired isInvalid={"JOB_ID" in errors}>
                 <Select

@@ -9,9 +9,9 @@ axios.interceptors.request.use(async (config) => {
 
     const token = await AsyncStorage.getItem("accessToken");
 
-    config.url = `${'http://172.30.22.161/pk-rest-server'}${config.url}`;
+    //config.url = `${'http://172.30.22.161/pk-rest-server'}${config.url}`;
     config.timeout = 1000 * 10
-    //config.url = `${REACT_APP_API_URL}${config.url}`;
+    config.url = `${REACT_APP_API_URL}${config.url}`;
     //config.headers = { 'Content-Type': 'multipart/form-data' }
     
     if (token) {

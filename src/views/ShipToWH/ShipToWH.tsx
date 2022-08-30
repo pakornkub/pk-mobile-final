@@ -299,7 +299,7 @@ const ShipToWH: React.FC = () => {
                             <DataTable.Cell style={styles.table_title_36}>
                               {value.QR_NO}
                             </DataTable.Cell>
-                            <DataTable.Cell>{value.ITEM_ID}</DataTable.Cell>
+                            <DataTable.Cell>{value.ITEM_CODE}</DataTable.Cell>
                           </DataTable.Row>
                         );
                       })
