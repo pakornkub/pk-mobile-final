@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       toast.show({
         render: () => {
           return (
-            <AppAlert text={error?.response?.data?.message} type="error" />
+            <AppAlert text={error?.response?.data?.message || error?.message} type="error" />
           );
         },
         placement: "top",

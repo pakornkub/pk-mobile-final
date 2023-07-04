@@ -1,3 +1,4 @@
+//@ts-ignore
 import jwt_decode from "jwt-decode";
 
 export const getTimeFromToken = (token: string): number => {

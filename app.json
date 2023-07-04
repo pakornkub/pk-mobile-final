@@ -12,6 +12,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
+      "enabled": false,
+      "checkAutomatically": "ON_ERROR_RECOVERY",
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
@@ -30,6 +32,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "extra": {
+      "eas": {
+        "projectId": "341cd099-4e94-46fb-972a-3ab5d5ae8c18"
+      }
+    }
   }
 }
