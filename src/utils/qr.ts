@@ -5,7 +5,7 @@ export const getDataFromQR = (qr: string): any => {
     const Buffer = require('buffer').Buffer;
 
     //TODO: get data qr from url "http://119.59.105.14/toto-warranty/service?info={data base64}"
-    let info = Buffer.from(qr?.split('?info=')[1], 'base64')?.toString() || '';
+    let info = qr?.split('?info=')[1] ? ( Buffer.from(qr?.split('?info=')[1], 'base64')?.toString() || '' ) : qr;
 
     const qrObject = JSON.parse(info);
 
