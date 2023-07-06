@@ -9,19 +9,17 @@
     },
     "preview": {
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
+      "channel": "preview",
+      "env": {
+        "REACT_APP_API_URL": "http://119.59.105.14/pk-rest-server",
+        "REACT_APP_PLATFORM" : "MA"
       }
-    },
-    "preview2": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
-    },
-    "preview3": {
-      "developmentClient": true
     },
     "production": {
+      "channel": "production",
+      "android": {
+        "buildType": "apk"
+      },
       "env": {
         "REACT_APP_API_URL": "http://172.30.22.161/pk-rest-server",
         "REACT_APP_PLATFORM" : "MA"
