@@ -11,3 +11,4 @@
 
 # Build File .APK
 - eas build -p android --profile preview
+- eas build -p android --profile production
