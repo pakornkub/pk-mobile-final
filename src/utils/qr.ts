@@ -6,7 +6,7 @@ export const getDataFromQR = (qr: string): any => {
 
     //TODO: get data qr from url "http://119.59.105.14/toto-warranty/service?info={data base64}"
     let info = qr?.split('?info=')[1] ? ( Buffer.from(qr?.split('?info=')[1], 'base64')?.toString() || '' ) : qr;
-
+    console.log('QR Scan Middleware =>',info)
     const qrObject = JSON.parse(info);
 
     return qrObject[0];

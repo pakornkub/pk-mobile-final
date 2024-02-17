@@ -1,37 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useQueryClient } from "react-query";
-import {
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Box,
-  Input,
-  Icon,
-  VStack,
-  Button,
-  useToast,
-  FormControl,
-  HStack,
-  Text,
-} from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
-import { DataTable } from "react-native-paper";
+import React, { useState, useEffect, useRef } from 'react';
+import { useQueryClient } from 'react-query';
+import { TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity } from 'react-native';
+import { Box, Input, Icon, VStack, Button, useToast, FormControl, HStack, Text } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
+import { DataTable } from 'react-native-paper';
 
-import { getDataFromQR } from "../../utils/qr";
-import LoadingScreen from "../../components/LoadingScreen";
-import AppScanner from "../../components/AppScanner";
-import AppAlert from "../../components/AppAlert";
+import { getDataFromQR } from '../../utils/qr';
+import LoadingScreen from '../../components/LoadingScreen';
+import AppScanner from '../../components/AppScanner';
+import AppAlert from '../../components/AppAlert';
 
-import { useCheckStock } from "../../hooks/useCheckStock";
-import { useUpdateWithdraw } from "../../hooks/useWithdraw";
+import { useCheckStock } from '../../hooks/useCheckStock';
+import { useUpdateWithdraw } from '../../hooks/useWithdraw';
 
-import { styles } from "../styles";
+import { styles } from '../styles';
 
 const Withdraw: React.FC = () => {
-  const initItem = { QR_NO: "" };
+  const initItem = { QR_NO: '' };
   const initItems: any[] = [];
   const initErrors = {};
 
@@ -56,7 +41,7 @@ const Withdraw: React.FC = () => {
     data: itemData,
     refetch: itemRefetch,
   } = useCheckStock({
-    QR_NO: item?.QR_NO || "",
+    QR_NO: item?.QR_NO || '',
   });
 
   const {
@@ -75,13 +60,13 @@ const Withdraw: React.FC = () => {
       return;
     }
 
-    clearState("Error");
+    clearState('Error');
 
     const qr = getDataFromQR(value);
 
     setItem({
       ...item,
-      QR_NO: qr?.QR_NO || "",
+      QR_NO: qr?.QR_NO || '',
     });
 
     refScanner.current = true;
@@ -94,6 +79,8 @@ const Withdraw: React.FC = () => {
   const calculateTotal = () => {
     if (parseInt(items.length) <= 20 && parseInt(items.length) > 0) {
       setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
     }
   };
 
@@ -101,33 +88,26 @@ const Withdraw: React.FC = () => {
     refScanner.current = false;
 
     if (!item.QR_NO) {
-      setErrors({ ...errors, QR_NO: "Invalid QR format" });
-      clearState("Item");
+      setErrors({ ...errors, QR_NO: 'Invalid QR format' });
+      clearState('Item');
       return false;
     }
 
     if (!itemData.data.status) {
       setErrors({ ...errors, QR_NO: `${itemData.data.message}` });
-      clearState("Item");
+      clearState('Item');
       return false;
     }
 
-    if (
-      !itemData.data.data.Location_ID ||
-      parseInt(itemData.data.data.Location_ID) !== 1
-    ) {
-      setErrors({ ...errors, QR_NO: "Product not in Store Repack Location" });
-      clearState("Item");
+    if (!itemData.data.data.Location_ID || parseInt(itemData.data.data.Location_ID) !== 1) {
+      setErrors({ ...errors, QR_NO: 'Product not in Store Repack Location' });
+      clearState('Item');
       return false;
     }
 
-    if (
-      !itemData.data.data.ItemStatus_ID ||
-      (parseInt(itemData.data.data.ItemStatus_ID) !== 2 &&
-        parseInt(itemData.data.data.ItemStatus_ID) !== 5)
-    ) {
-      setErrors({ ...errors, QR_NO: "Status product is not Good or Unlock" });
-      clearState("Item");
+    if (!itemData.data.data.ItemStatus_ID || (parseInt(itemData.data.data.ItemStatus_ID) !== 2 && parseInt(itemData.data.data.ItemStatus_ID) !== 5)) {
+      setErrors({ ...errors, QR_NO: 'Status product is not Good or Unlock' });
+      clearState('Item');
       return false;
     }
 
@@ -136,14 +116,14 @@ const Withdraw: React.FC = () => {
         return value.QR_NO === item.QR_NO;
       }).length > 0
     ) {
-      setErrors({ ...errors, QR_NO: "QR No. this duplicate in list" });
-      clearState("Item");
+      setErrors({ ...errors, QR_NO: 'QR No. this duplicate in list' });
+      clearState('Item');
       return false;
     }
 
     if (parseInt(items.length) === 20) {
-      setErrors({ ...errors, QR_NO: "Total completed can not scan" });
-      clearState("Item");
+      setErrors({ ...errors, QR_NO: 'Total completed can not scan' });
+      clearState('Item');
       return false;
     }
 
@@ -151,14 +131,14 @@ const Withdraw: React.FC = () => {
   };
 
   const clearState = (type: string) => {
-    if (type === "All") {
+    if (type === 'All') {
       setItem(initItem);
       setItems(initItems);
       setErrors(initErrors);
       setDisabledButton(true);
-    } else if (type === "Item") {
+    } else if (type === 'Item') {
       setItem(initItem);
-    } else if (type === "Items") {
+    } else if (type === 'Items') {
       setItems(initItems);
     } else {
       setErrors(initErrors);
@@ -184,32 +164,22 @@ const Withdraw: React.FC = () => {
 
       setItems(itemList);
 
-      clearState("Item");
+      clearState('Item');
     }
   }, [itemData]);
 
   useEffect(() => {
-    if (updateStatus === "success") {
+    if (updateStatus === 'success') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={updateData?.data?.message || "success"}
-            type="success"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={updateData?.data?.message || 'success'} type="success" />,
+        placement: 'top',
         duration: 2000,
       });
-      clearState("All");
-    } else if (updateStatus === "error") {
+      clearState('All');
+    } else if (updateStatus === 'error') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={updateError?.response?.data?.message || "error"}
-            type="error"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={updateError?.response?.data?.message || 'error'} type="error" />,
+        placement: 'top',
         duration: 3000,
       });
     }
@@ -225,7 +195,7 @@ const Withdraw: React.FC = () => {
 
   useEffect(() => {
     return () => {
-      clearState("All");
+      clearState('All');
       queryClient.clear();
     };
   }, []);
@@ -237,7 +207,7 @@ const Withdraw: React.FC = () => {
           <Box flex={1}>
             <LoadingScreen show={itemIsLoading || updateIsLoading} />
             <VStack space={10} p={5}>
-              <FormControl isRequired isInvalid={"QR_NO" in errors}>
+              <FormControl isRequired isInvalid={'QR_NO' in errors}>
                 <Input
                   h={50}
                   size={20}
@@ -247,27 +217,15 @@ const Withdraw: React.FC = () => {
                   p={2}
                   placeholder="SCAN QR"
                   InputRightElement={
-                    <Icon
-                      size={35}
-                      color={"primary.600"}
-                      as={<MaterialIcons name="qr-code-scanner" />}
-                      onPress={() => setCamera(true)}
-                    />
+                    <Icon size={35} color={'primary.600'} as={<MaterialIcons name="qr-code-scanner" />} onPress={() => setCamera(true)} />
                   }
                   autoFocus
-                  value={item?.QR_NO || ""}
+                  value={item?.QR_NO || ''}
                   onChangeText={(value) => handleScanner(value)}
                 />
-                {"QR_NO" in errors && (
-                  <FormControl.ErrorMessage>
-                    {errors.QR_NO}
-                  </FormControl.ErrorMessage>
-                )}
+                {'QR_NO' in errors && <FormControl.ErrorMessage>{errors.QR_NO}</FormControl.ErrorMessage>}
               </FormControl>
-              <ScrollView
-                keyboardShouldPersistTaps="handled"
-                style={{ height: "45%" }}
-              >
+              <ScrollView keyboardShouldPersistTaps="handled" style={{ height: '45%' }}>
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
                     <DataTable.Header>
@@ -285,12 +243,8 @@ const Withdraw: React.FC = () => {
                       items.map((value: any, key: number) => {
                         return (
                           <DataTable.Row key={key}>
-                            <DataTable.Title style={styles.table_title_10}>
-                              {key + 1}
-                            </DataTable.Title>
-                            <DataTable.Cell style={styles.table_title_36}>
-                              {value.QR_NO}
-                            </DataTable.Cell>
+                            <DataTable.Title style={styles.table_title_10}>{key + 1}</DataTable.Title>
+                            <DataTable.Cell style={styles.table_title_36}>{value.QR_NO}</DataTable.Cell>
                             <DataTable.Cell>{value.ITEM_CODE}</DataTable.Cell>
                           </DataTable.Row>
                         );
@@ -304,22 +258,20 @@ const Withdraw: React.FC = () => {
                 </TouchableOpacity>
               </ScrollView>
               <VStack>
-                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                <HStack alignItems={'center'} justifyContent={'space-between'}>
                   <Text fontSize={25}>{`WITHDRAW`}</Text>
                   <Text fontSize={25}>
-                    <Text bold color={"red.600"}>{`${items.length || 0}`}</Text>
+                    <Text bold color={'red.600'}>{`${items.length || 0}`}</Text>
                   </Text>
                 </HStack>
-                <HStack alignItems={"center"} justifyContent={"space-between"}>
+                <HStack alignItems={'center'} justifyContent={'space-between'}>
                   <Text fontSize={25}>{`MAX`}</Text>
                   <Text fontSize={25}>{`20`}</Text>
                 </HStack>
               </VStack>
               <Button
                 backgroundColor="green.600"
-                leftIcon={
-                  <Icon as={<MaterialIcons name="check" />} size="sm" />
-                }
+                leftIcon={<Icon as={<MaterialIcons name="check" />} size="sm" />}
                 isDisabled={disabledButton}
                 onPress={handleSubmit}
               >

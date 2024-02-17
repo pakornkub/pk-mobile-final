@@ -89,7 +89,7 @@ const Login: React.FC = () => {
               )}
               name="username"
               rules={{ required: "Username is required" }}
-              defaultValue="pakorn.wo"
+              defaultValue=""
             />
             <FormControl.ErrorMessage>
               {errors.username?.message}
@@ -126,7 +126,7 @@ const Login: React.FC = () => {
               )}
               name="password"
               rules={{ required: "Password is required" }}
-              defaultValue="1234"
+              defaultValue=""
             />
 
             <FormControl.ErrorMessage>

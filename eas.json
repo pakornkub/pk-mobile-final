@@ -21,7 +21,7 @@
         "buildType": "apk"
       },
       "env": {
-        "REACT_APP_API_URL": "http://172.30.22.161/pk-rest-server",
+        "REACT_APP_API_URL": "http://172.30.22.9/pk-rest-server",
         "REACT_APP_PLATFORM" : "MA"
       }
     }

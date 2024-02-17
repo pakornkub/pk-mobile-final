@@ -1,49 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useQueryClient } from "react-query";
-import {
-  TouchableWithoutFeedback,
-  Keyboard,
-  RefreshControl,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Box,
-  Input,
-  Select,
-  Icon,
-  VStack,
-  Button,
-  useToast,
-  FormControl,
-  Text,
-  HStack,
-  AlertDialog,
-} from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
-import { DataTable } from "react-native-paper";
+import React, { useState, useEffect, useRef } from 'react';
+import { useQueryClient } from 'react-query';
+import { TouchableWithoutFeedback, Keyboard, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
+import { Box, Input, Select, Icon, VStack, Button, useToast, FormControl, Text, HStack, AlertDialog } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
+import { DataTable } from 'react-native-paper';
 
-import { getDataFromQR } from "../../utils/qr";
-import LoadingScreen from "../../components/LoadingScreen";
-import AppScanner from "../../components/AppScanner";
-import AppAlert from "../../components/AppAlert";
-import AppAlertDialog from "../../components/AppAlertDialog";
-import AlertDialogSemi from "../../components/AlertDialogSemi";
+import { getDataFromQR } from '../../utils/qr';
+import LoadingScreen from '../../components/LoadingScreen';
+import AppScanner from '../../components/AppScanner';
+import AppAlert from '../../components/AppAlert';
+import AppAlertDialog from '../../components/AppAlertDialog';
+import AlertDialogSemi from '../../components/AlertDialogSemi';
 
-import {
-  useJobRepack,
-  useJobRepackBOM,
-  useUpdateJobRepack,
-  useExecJobRepackTransactions,
-  useExecJobRepackItem,
-} from "../../hooks/useJobRepack";
+import { useJobRepack, useJobRepackBOM, useUpdateJobRepack, useExecJobRepackTransactions, useExecJobRepackItem } from '../../hooks/useJobRepack';
 
-import { styles } from "../styles";
+import { styles } from '../styles';
 
 const JobRepack: React.FC = () => {
   const initOrder = {};
-  const initItem = { QR_NO: "", Tag_ID: "", Item_ID: "", Series: "" };
-  const initBox = { QR_NO_BOX: "" };
+  const initItem = { QR_NO: '', Tag_ID: '', Item_ID: '', Series: '' };
+  const initBox = { QR_NO_BOX: '' };
   const initErrors = {};
 
   const toast = useToast();
@@ -71,7 +47,8 @@ const JobRepack: React.FC = () => {
 
   const {
     isLoading: orderIsLoading,
-    isFetching,
+    isFetching: orderIsFetching,
+    isFetchedAfterMount: orderIsFetchedAfterMount,
     isError,
     data: orderData,
     refetch: orderRefetch,
@@ -81,10 +58,12 @@ const JobRepack: React.FC = () => {
 
   const {
     isLoading: bomIsLoading,
+    isFetching: bomIsFetching,
+    isFetchedAfterMount: bomIsFetchedAfterMount,
     data: bomData,
     refetch: bomRefetch,
   } = useJobRepackBOM({
-    JOB_ID: order?.JOB_ID || "",
+    JOB_ID: order?.JOB_ID || '',
   });
 
   const {
@@ -119,9 +98,9 @@ const JobRepack: React.FC = () => {
       return;
     }
 
-    clearState("Error");
+    clearState('Error');
 
-    let job = value.split("|");
+    let job = value.split('|');
 
     let jobOrder = [...orderData?.data?.data];
 
@@ -146,22 +125,22 @@ const JobRepack: React.FC = () => {
       return;
     }
 
-    clearState("Error");
+    clearState('Error');
 
     const qr = getDataFromQR(value);
 
     if (qr?.ITEM_CODE) {
       setItem({
         ...item,
-        Item_Code: qr?.ITEM_CODE || "",
+        Item_Code: qr?.ITEM_CODE || '',
       });
     } else {
       setItem({
         ...item,
-        QR_NO: qr?.QR_NO || "",
-        Tag_ID: qr?.Tag_ID || "",
-        Item_ID: qr?.Item_ID || "",
-        Series: qr?.Series || "",
+        QR_NO: qr?.QR_NO || '',
+        Tag_ID: qr?.Tag_ID || '',
+        Item_ID: qr?.Item_ID || '',
+        Series: qr?.Series || '',
       });
     }
 
@@ -175,21 +154,17 @@ const JobRepack: React.FC = () => {
       return;
     }
 
-    clearState("Error");
+    clearState('Error');
 
     const qr = getDataFromQR(value);
 
-    setBox({ ...box, QR_NO_BOX: qr?.QR_NO || "" });
+    setBox({ ...box, QR_NO_BOX: qr?.QR_NO || '' });
 
     refScannerBox.current = true;
   };
 
   const handleAlertDialog = () => {
-    if (
-      parseInt(order?.JOB_QTY || 0) !== parseInt(order?.BOX_QTY || 0) &&
-      parseInt(order?.JOB_QTY || 0) > 0 &&
-      parseInt(order?.BOX_QTY || 0) !== 0
-    ) {
+    if (parseInt(order?.JOB_QTY || 0) !== parseInt(order?.BOX_QTY || 0) && parseInt(order?.JOB_QTY || 0) > 0 && parseInt(order?.BOX_QTY || 0) !== 0) {
       setIsOpenAlertDialog(true);
     } else {
       handleSubmit();
@@ -225,68 +200,58 @@ const JobRepack: React.FC = () => {
   };
 
   const calculateBox = () => {
-    if (
-      parseInt(order?.JOB_QTY || 0) === parseInt(order?.BOX_QTY || 0) &&
-      parseInt(order?.BOX_QTY || 0) !== 0
-    ) {
+    if (parseInt(order?.JOB_QTY || 0) === parseInt(order?.BOX_QTY || 0) && parseInt(order?.BOX_QTY || 0) !== 0) {
       setDisabledItem(true);
       setDisabledBox(true);
       setDisabledButton(false);
-    } else if (
-      parseInt(order?.JOB_QTY || 0) > 0 &&
-      parseInt(order?.BOX_QTY || 0) !== 0
-    ) {
+    } else if (parseInt(order?.JOB_QTY || 0) > 0 && parseInt(order?.BOX_QTY || 0) !== 0) {
       setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
     }
   };
 
   const validateErrors = (QRType: string) => {
-    refScanner.current = false;
-    refScannerBox.current = false;
-
     if (!order.JOB_ID) {
-      setErrors({ ...errors, JOB_ID: "Repack Order is required" });
-      clearState("Item");
+      setErrors({ ...errors, JOB_ID: 'Repack Order is required' });
+      refScanner.current = false;
+      clearState('Item');
       return false;
     }
 
     if (
       bomData.data.data.filter((value: any) => {
-        if (item?.Item_Code)
-          return (
-            value.SP === item.Item_Code &&
-            parseInt(value.Actual) === parseInt(value.BOM)
-          );
-        else
-          return (
-            parseInt(value.Item_ID) === parseInt(item.Item_ID) &&
-            parseInt(value.Actual) === parseInt(value.BOM)
-          );
+        if (item?.Item_Code) return value.SP === item.Item_Code && parseInt(value.Actual) === parseInt(value.BOM);
+        else return parseInt(value.Item_ID) === parseInt(item.Item_ID) && parseInt(value.Actual) === parseInt(value.BOM);
       }).length > 0
     ) {
-      setErrors({ ...errors, QR_NO: "This Item Actual Completed" });
-      clearState("Item");
+      setErrors({ ...errors, QR_NO: 'This Item Actual Completed' });
+      refScanner.current = false;
+      clearState('Item');
       return false;
     }
 
-    if (QRType === "Item") {
+    if (QRType === 'Item') {
       if (item?.Item_Code) {
         if (!item.Item_Code) {
-          setErrors({ ...errors, QR_NO: "Invalid QR format Miscellaneous" });
-          clearState("Item");
+          setErrors({ ...errors, QR_NO: 'Invalid QR format Miscellaneous' });
+          refScanner.current = false;
+          clearState('Item');
           return false;
         }
       } else {
         if (!item.QR_NO || !item.Tag_ID) {
-          setErrors({ ...errors, QR_NO: "Invalid QR format" });
-          clearState("Item");
+          setErrors({ ...errors, QR_NO: 'Invalid QR format' });
+          refScanner.current = false;
+          clearState('Item');
           return false;
         }
       }
-    } else if (QRType === "Box") {
+    } else if (QRType === 'Box') {
       if (!box.QR_NO_BOX) {
-        setErrors({ ...errors, QR_NO_BOX: "Invalid QR BOX format" });
-        clearState("Box");
+        setErrors({ ...errors, QR_NO_BOX: 'Invalid QR BOX format' });
+        refScannerBox.current = false;
+        clearState('Box');
         return false;
       }
     }
@@ -295,17 +260,17 @@ const JobRepack: React.FC = () => {
   };
 
   const clearState = (type: string) => {
-    if (type === "All") {
+    if (type === 'All') {
       setOrder(initOrder);
       setItem(initItem);
       setBox(initBox);
       setErrors(initErrors);
       setDisabledButton(true);
-    } else if (type === "Item") {
+    } else if (type === 'Item') {
       setItem(initItem);
-    } else if (type === "Box") {
+    } else if (type === 'Box') {
       setBox(initBox);
-    } else if (type === "Order") {
+    } else if (type === 'Order') {
       setOrder(initOrder);
     } else {
       setErrors(initErrors);
@@ -317,132 +282,123 @@ const JobRepack: React.FC = () => {
   }, [order]);
 
   useEffect(() => {
-    if (refScanner.current && validateErrors("Item")) {
+    if (refScanner.current && validateErrors('Item')) {
       if (item.Series) {
         setIsOpenAlertDialogSemi(true);
       } else {
+        // console.log('Scan Item for Handle => ',item)
         handleScannerSubmit();
       }
     }
   }, [item]);
 
   useEffect(() => {
-    if (refScannerBox.current && validateErrors("Box")) {
+    if (refScannerBox.current && validateErrors('Box')) {
       transMutate({ ...order, ...box });
     }
   }, [box]);
 
   useEffect(() => {
-    handleChangeOrder(order.JOB);
-  }, [orderData]);
+    orderIsFetchedAfterMount && handleChangeOrder(order.JOB);
+  }, [orderIsFetching]);
 
   useEffect(() => {
-    calculateItem();
-    calculateBox();
-  }, [bomData]);
+    if (bomIsFetchedAfterMount) {
+      calculateItem();
+      calculateBox();
+    }
+  }, [bomIsFetching]);
 
   useEffect(() => {
-    if (itemStatus === "success") {
+    if (itemStatus === 'success') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={itemData?.data?.message || "success"}
-            type="success"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={itemData?.data?.message || 'success'} type="success" />,
+        placement: 'top',
         duration: 2000,
       });
-    } else if (itemStatus === "error") {
+      refScanner.current = false;
+      clearState('Item');
+    } else if (itemStatus === 'error') {
+      // console.log('Error Scan')
       toast.show({
-        render: () => (
-          <AppAlert
-            text={itemError?.response?.data?.message || "error"}
-            type="error"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={itemError?.response?.data?.message || 'error'} type="error" />,
+        placement: 'top',
         duration: 3000,
       });
+      refScanner.current = false;
+      clearState('Item');
     }
 
     return () => {
       refScanner.current = false;
-      clearState("Item");
+      clearState('Item');
     };
   }, [itemStatus]);
 
   useEffect(() => {
-    if (transStatus === "success") {
+    if (transStatus === 'success') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={transData?.data?.message || "success"}
-            type="success"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={transData?.data?.message || 'success'} type="success" />,
+        placement: 'top',
         duration: 2000,
       });
-    } else if (transStatus === "error") {
+      refScannerBox.current = false;
+      clearState('Box');
+    } else if (transStatus === 'error') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={transError?.response?.data?.message || "error"}
-            type="error"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={transError?.response?.data?.message || 'error'} type="error" />,
+        placement: 'top',
         duration: 3000,
       });
+      refScannerBox.current = false;
+      clearState('Box');
     }
 
     return () => {
       refScannerBox.current = false;
-      clearState("Box");
+      clearState('Box');
     };
   }, [transStatus]);
 
   useEffect(() => {
-    if (updateStatus === "success") {
+    if (updateStatus === 'success') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={updateData?.data?.message || "success"}
-            type="success"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={updateData?.data?.message || 'success'} type="success" />,
+        placement: 'top',
         duration: 2000,
       });
-      clearState("All");
-    } else if (updateStatus === "error") {
+      refScanner.current = false;
+      refScannerBox.current = false;
+      clearState('All');
+    } else if (updateStatus === 'error') {
       toast.show({
-        render: () => (
-          <AppAlert
-            text={updateError?.response?.data?.message || "error"}
-            type="error"
-          />
-        ),
-        placement: "top",
+        render: () => <AppAlert text={updateError?.response?.data?.message || 'error'} type="error" />,
+        placement: 'top',
         duration: 3000,
       });
+      refScanner.current = false;
+      refScannerBox.current = false;
+      clearState('All');
     }
 
     return () => {
       refScanner.current = false;
       refScannerBox.current = false;
+      clearState('All');
     };
   }, [updateStatus]);
 
   useEffect(() => {
-    refInput?.current?.focus();
-    refInputBox?.current?.focus();
+    !disabledItem && refInput?.current?.focus();
+  });
+
+  useEffect(() => {
+    !disabledBox && refInputBox?.current?.focus();
   });
 
   useEffect(() => {
     return () => {
-      clearState("All");
+      clearState('All');
       queryClient.clear();
     };
   }, []);
@@ -452,35 +408,25 @@ const JobRepack: React.FC = () => {
       {!camera && !camera2 ? (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Box flex={1}>
-            <LoadingScreen show={itemIsLoading ||updateIsLoading || transIsLoading} />
+            <LoadingScreen show={itemIsLoading || updateIsLoading || transIsLoading} />
             <VStack space={5} p={5}>
-              <FormControl isRequired isInvalid={"JOB_ID" in errors}>
+              <FormControl isRequired isInvalid={'JOB_ID' in errors} isReadOnly>
                 <Select
                   h={50}
                   size={20}
-                  width={"100%"}
+                  width={'100%'}
                   accessibilityLabel="Choose Service"
                   placeholder="REPACK ORDER NO."
-                  selectedValue={order.JOB || ""}
+                  selectedValue={order.JOB || ''}
                   onValueChange={(value) => handleChangeOrder(value)}
                 >
                   {orderData?.data?.data?.map((value: any) => {
-                    return (
-                      <Select.Item
-                        key={value.JOB_ID}
-                        label={value.JOB_No}
-                        value={`${value.JOB_ID}|${value.JOB_QTY}`}
-                      />
-                    );
+                    return <Select.Item key={value.JOB_ID} label={value.JOB_No} value={`${value.JOB_ID}|${value.JOB_QTY}`} />;
                   })}
                 </Select>
-                {"JOB_ID" in errors && (
-                  <FormControl.ErrorMessage>
-                    {errors.JOB_ID}
-                  </FormControl.ErrorMessage>
-                )}
+                {'JOB_ID' in errors && <FormControl.ErrorMessage>{errors.JOB_ID}</FormControl.ErrorMessage>}
               </FormControl>
-              <FormControl isRequired isInvalid={"QR_NO" in errors}>
+              <FormControl isRequired isInvalid={'QR_NO' in errors} isDisabled={disabledItem} pointerEvents={disabledItem ? 'none' : 'auto'}>
                 <Input
                   h={50}
                   size={20}
@@ -489,35 +435,25 @@ const JobRepack: React.FC = () => {
                   variant="underlined"
                   p={2}
                   placeholder="SCAN QR PART"
-                  isDisabled={disabledItem}
                   InputRightElement={
                     <Icon
                       size={35}
-                      color={"primary.600"}
+                      color={'primary.600'}
                       as={<MaterialIcons name="qr-code-scanner" />}
                       onPress={() => setCamera(true)}
                       disabled={disabledItem}
                     />
                   }
                   autoFocus
-                  value={/* item?.QR_NO || item?.Item_Code ||  */""}
+                  value={/* item?.QR_NO || item?.Item_Code ||  */ ''}
                   onChangeText={(value) => handleScanner(value)}
                 />
-                {"QR_NO" in errors && (
-                  <FormControl.ErrorMessage>
-                    {errors.QR_NO}
-                  </FormControl.ErrorMessage>
-                )}
+                {'QR_NO' in errors && <FormControl.ErrorMessage>{errors.QR_NO}</FormControl.ErrorMessage>}
               </FormControl>
               <ScrollView
                 keyboardShouldPersistTaps="handled"
-                style={{ height: "45%" }}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={bomIsLoading}
-                    onRefresh={() => orderRefetch()}
-                  />
-                }
+                style={{ height: '45%' }}
+                refreshControl={<RefreshControl refreshing={bomIsLoading} onRefresh={() => orderRefetch()} />}
               >
                 <TouchableOpacity activeOpacity={1}>
                   <DataTable>
@@ -538,24 +474,12 @@ const JobRepack: React.FC = () => {
                     {bomData?.data?.data?.map((value: any, key: number) => {
                       return (
                         <DataTable.Row key={key}>
-                          <DataTable.Title style={styles.table_title_10}>
-                            {value.No}
-                          </DataTable.Title>
+                          <DataTable.Title style={styles.table_title_10}>{value.No}</DataTable.Title>
                           <DataTable.Cell style={styles.table_title_54}>
-                            <Text
-                              color={
-                                value.Product_ID === 3
-                                  ? "indigo.500"
-                                  : value.Product_ID === 4
-                                  ? "blue.500"
-                                  : "black"
-                              }
-                            >
-                              {value.SP}
-                            </Text>
+                            <Text color={value.Product_ID === 3 ? 'indigo.500' : value.Product_ID === 4 ? 'blue.500' : 'black'}>{value.SP}</Text>
                           </DataTable.Cell>
                           <DataTable.Cell numeric style={styles.table_title_18}>
-                            <Text bold color={"red.600"}>
+                            <Text bold color={'red.600'}>
                               {value.Actual}
                             </Text>
                           </DataTable.Cell>
@@ -572,12 +496,13 @@ const JobRepack: React.FC = () => {
                   </DataTable>
                 </TouchableOpacity>
               </ScrollView>
-              <HStack alignItems={"center"} justifyContent={"space-between"}>
+              <HStack alignItems={'center'} justifyContent={'space-between'}>
                 <FormControl
                   w="50%"
                   isRequired
-                  isInvalid={"QR_NO_BOX" in errors}
+                  isInvalid={'QR_NO_BOX' in errors}
                   isDisabled={disabledBox}
+                  pointerEvents={disabledBox ? 'none' : 'auto'}
                 >
                   <Input
                     h={50}
@@ -590,45 +515,33 @@ const JobRepack: React.FC = () => {
                     InputRightElement={
                       <Icon
                         size={35}
-                        color={"primary.600"}
+                        color={'primary.600'}
                         as={<MaterialIcons name="qr-code-scanner" />}
                         onPress={() => setCamera2(true)}
                         disabled={disabledBox}
                       />
                     }
-                    value={box?.QR_NO_BOX || ""}
+                    value={box?.QR_NO_BOX || ''}
                     onChangeText={(value) => handleScannerBox(value)}
                   />
-                  {"QR_NO_BOX" in errors && (
-                    <FormControl.ErrorMessage>
-                      {errors.QR_NO_BOX}
-                    </FormControl.ErrorMessage>
-                  )}
+                  {'QR_NO_BOX' in errors && <FormControl.ErrorMessage>{errors.QR_NO_BOX}</FormControl.ErrorMessage>}
                 </FormControl>
 
                 <Text fontSize={25}>
-                  <Text bold color={"green.600"}>{`${
-                    order?.BOX_QTY || 0
-                  }`}</Text>
+                  <Text bold color={'green.600'}>{`${order?.BOX_QTY || 0}`}</Text>
                   {` / ${order?.JOB_QTY || 0} BOX`}
                 </Text>
               </HStack>
               <Button
                 backgroundColor="green.600"
-                leftIcon={
-                  <Icon as={<MaterialIcons name="check" />} size="sm" />
-                }
+                leftIcon={<Icon as={<MaterialIcons name="check" />} size="sm" />}
                 isDisabled={disabledButton}
                 onPress={handleAlertDialog}
               >
                 SAVE
               </Button>
             </VStack>
-            <AppAlertDialog
-              isOpenAlertDialog={isOpenAlertDialog}
-              setIsOpenAlertDialog={setIsOpenAlertDialog}
-              handleSubmit={handleSubmit}
-            />
+            <AppAlertDialog isOpenAlertDialog={isOpenAlertDialog} setIsOpenAlertDialog={setIsOpenAlertDialog} handleSubmit={handleSubmit} />
             <AlertDialogSemi
               itemSemi={item}
               isOpenAlertDialogSemi={isOpenAlertDialogSemi}

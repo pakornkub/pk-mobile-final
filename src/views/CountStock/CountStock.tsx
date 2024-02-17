@@ -156,6 +156,10 @@ const CountStock: React.FC = () => {
     ) {
       setDisabledButton(false);
     }
+    else
+    {
+      setDisabledButton(true);
+    }
   }, [itemData]);
 
   const validateErrors = useCallback(() => {
@@ -285,7 +289,7 @@ const CountStock: React.FC = () => {
           <Box flex={1}>
             <LoadingScreen show={updateIsLoading || createIsLoading} />
             <VStack space={10} p={5}>
-              <FormControl isRequired isInvalid={"CountStock_ID" in errors}>
+              <FormControl isRequired isInvalid={"CountStock_ID" in errors} isReadOnly>
                 <Select
                   h={50}
                   size={20}
